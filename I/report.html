@@ -1,0 +1,218 @@
+<!DOCTYPE html>
+<!--Validated through w3.org-->
+<!--CTRL+F: "WIP"-->
+<html lang="en">
+
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>ARS for ResourceFinder</title>
+    <style>
+        h1,
+        h2,
+        h3,
+        h4,
+        h5,
+        h6 {
+            color: darkblue;
+        }
+
+        li {
+            margin-top: 1%;
+        }
+
+        .flex-container {
+            display: flex;
+            justify-content: space-around;
+        }
+
+        .image-title {
+            margin-top: auto;
+            margin-bottom: auto;
+            font-style: italic;
+        }
+
+        .image {
+            border-radius: 1%;
+            height: auto;
+            width: 50%;
+            max-width: 50%;
+        }
+    </style>
+</head>
+
+<body>
+    <header>
+        <h1>Application Requirements Specification for ResourceFinder(ReFi) Platform</h1>
+        <div role="contentinfo">
+            <h2>Authors:</h2>
+            <ul>
+                <li>
+                    <strong>Name: </strong>Butnaru Vlad Andrei<br>
+                    <strong>Affiliation: </strong><a href="https://www.info.uaic.ro/">University "Alexandru Ioan Cuza",
+                        Department of Computer Science</a><br>
+                    <strong>Email: </strong><a href="mailto:butnaruvlad2003@gmail.com">butnaruvlad2003@gmail.com</a>
+                </li>
+                <li>
+                    <strong>Name: </strong>Zosin Alexandru<br>
+                    <strong>Affiliation: </strong><a href="https://www.info.uaic.ro/">University "Alexandru Ioan Cuza",
+                        Department of Computer Science</a><br>
+                    <strong>Email: </strong><a href="mailto:alex.zosin@yahoo.com">alex.zosin@yahoo.com</a>
+                </li>
+            </ul>
+        </div>
+    </header>
+    <section>
+        <h2>1. Introduction</h2>
+        <article id="project-scope">
+            <h3>1.1 Project Scope</h3>
+            <p>The goals of the project is to support developers in collecting, interrelating and finding resources of
+                interest, i.e. specialized websites, tutorials, multimedia presentations, source code, software projects
+                etc., targeting creative programming: creative coding depending on the purpose, the programming
+                languages (e.g., JavaScript, WebGL, WebAssembly), the desired result (2D illustration, 3D virtual world,
+                animation, sound content), the manner of interaction (classical, tactile, vocal) and others.</p>
+            <p>Based on the purpose ("I want to create landscapes using fractals", "I need a polyphonic generator")
+                and/or the user's preferences (e.g., "only JavaScript/TypeScript implementations"), the system will
+                recommend existing software solutions (frameworks, libraries, components etc.) necessary to create an
+                artifact.
+            </p>
+            <p>The platform, therefore, bridges the gap between complex programming concepts and tangible creative
+                outputs. By facilitating access to relevant resources based on specific project needs or user
+                preferences, it
+                encourages experimentation, creativity, learning, and, ultimately, the development of unique digital
+                artifacts.
+            </p>
+        </article>
+    </section>
+    <section>
+        <h2>2. Overall Description</h2>
+        <article id="product-perspective">
+            <h3>2.1 Product Perspective</h3>
+            <p>This platform is a pioneering, standalone product designed to significantly enhance the accessibility and
+                usability of resources for creative programming. It serves as an intermediary between developers and a
+                vast array of educational and practical resources, utilizing cutting-edge natural language processing to
+                offer tailored recommendations. The system's uniqueness lies in its ability to interconnect with both
+                local databases and external APIs like OpenAI, providing a seamless integration for users seeking to
+                advance their programming skills in creative and innovative ways.
+            </p>
+        </article>
+        <article id="product-functions">
+            <h3>2.2 Product Functions</h3>
+            <ul>
+                <li>Natural Language Query Processing</li>
+                <li>Resource Recommendation</li>
+                <li>OpenAI Profile Integration</li>
+            </ul>
+        </article>
+        <article id="user-classes">
+            <h3>2.3 User Classes and Characteristics</h3>
+            <p>Different user classes include <strong>Guest Users</strong>, who have access to basic functionalities
+                and a limited number of recommendations queries, <strong>Authenticated Users</strong>, who enjoy
+                personalized
+                recommendations tailored to their needs and preferences with OpenAI integration and
+                <strong>Administrators</strong>,
+                who oversee the platform's operations.
+            </p>
+            <p>Each class has, therefore, distinct interaction levels and privileges.</p>
+        </article>
+        <article id="operating-environment">
+            <h3>2.4 Operating Environment</h3>
+            <p>The software is designed to operate in a web-based environment, utilizing technologies such as Node.js
+                for the backend and HTML, CSS, and JavaScript for the frontend. It is compatible with various hardware
+                platforms (PC, tablets, mobile devices) and operating systems, offering broad accessibility for its
+                users.
+            </p>
+        </article>
+        <article id="assumptions-and-dependencies">
+            <h3>2.5 Assumptions and Dependencies</h3>
+            <p>Key assumptions include the reliability of the OpenAI API for processing queries and accessibility to a
+                MySQL database for the resources and various user preferences.
+                Dependencies are primarily on the OpenAI API for its natural language processing capabilities.
+            </p>
+        </article>
+    </section>
+    <section>
+        <h2>3. External Interface Requirements</h2>
+        <article id="user-interface">
+            <h3>3.1 User Interface</h3>
+            <p>The platform will feature a simple, responsive web design, compatible with various devices and screen
+                sizes (no screen layout constraints). The user interface will also include a dark/light theme toggle for
+                user eye-comfort.
+            </p>
+            <div class="flex-container">
+                <img src="ui_sketch.jpg" alt="UI made by pen basic sketch" class="image">
+                <span class="image-title">Basic sketch of the UI</span>
+            </div>
+        </article>
+        <article id="hardware-interfaces">
+            <h3>3.2 Hardware Interfaces</h3>
+            <p>As a web-based application, there are no specific hardware interface requirements. The platform is
+                accessible and performant on standard computing devices including desktops, laptops, tablets,
+                and smartphones.
+            </p>
+        </article>
+        <article id="software-interfaces">
+            <h3>3.3 Software Interfaces</h3>
+            <p>The platform will interface with the OpenAI API for processing natural language queries. The backend
+                database will be MySQL, whereas the server-side logic will be implemented in Node.js.
+                (WIP)
+            </p>
+        </article>
+    </section>
+    <section>
+        <h2>4. System Features and Requirements(WIP)</h2>
+        <article id="personalized-recommendations">
+            <h3>4.1 Personalized Recommendations</h3>
+            <p>Users can input their project goals into a form, which is processed in natural language by the OpenAI
+                API. (This page will do that and that and that...)
+                The system will cross-reference these inputs with a locally hosted MySQL database to recommend the most
+                relevant resources, frameworks, and tools.
+            </p>
+        </article>
+        <article id="resource-management">
+            <h3>4.2 Resource Submission and Management</h3>
+            <p>Authenticated users have the ability to submit resources to the platform. Each submission will require
+                the following information:
+            </p>
+            <ul>
+                <li>Title of the resource</li>
+                <li>Description</li>
+                <li>URL</li>
+                <li>Tags (e.g., JavaScript, WebGL, 3D Animation)</li>
+            </ul>
+            <p>Submissions will undergo a review process by administrators before being made publicly available.</p>
+        </article>
+        <article id="profile-management">
+            <h3>4.3 User Preferences and Profile Management</h3>
+            <p>Users can manage their profiles, including personal information, preferences, and linked OpenAI API
+                credentials. This section also allows users to review and manage their submitted resources and
+                preferences
+                for recommended technologies.
+            </p>
+        </article>
+        <article id="administrator-capabilities">
+            <h3>4.4 Administrator Capabilities</h3>
+            <p>Administrators have access to a dashboard for overseeing platform activity. This includes user
+                management, resource approval, and system settings. Features include:
+            </p>
+            <ul>
+                <li>User account creation, suspension, and deletion</li>
+                <li>Resource review and management</li>
+                <li>System analytics and reporting</li>
+            </ul>
+        </article>
+    </section>
+    <section>
+        <h2>5. Other Nonfunctional Requirements(WIP)</h2>
+        <article id="security">
+            <h3>5.1 Security</h3>
+            <p>Security measures will include protection against SQL injection, XSS? ...
+                Secure API integration, GDPR compliance and user data protection are other priorities.</p>
+        </article>
+    </section>
+    <footer>
+        <h2>(WIP)</h2>
+    </footer>
+</body>
+
+</html>
