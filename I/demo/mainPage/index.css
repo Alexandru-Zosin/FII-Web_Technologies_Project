@@ -1,0 +1,158 @@
+html {
+    height: 100vh;
+}
+body {
+    margin: 0;
+    padding: 0;
+    display: flex;
+    flex-direction: column;
+    justify-content: space-between;
+    /* overflow-x: hidden; */
+    font-family: Arial, sans-serif;
+    background-color: #f0f0f0; 
+    height: 100vh;
+}
+
+.nav-links {
+    display: flex;
+    flex-direction: row;
+    justify-content: space-between;
+    background-color: #333;
+    color: white; 
+    align-items: center;
+    margin-top: 0;
+    padding: 0 20px; 
+    box-shadow: 0 2px 4px rgba(0,0,0,0.1); 
+}
+
+.nav-links li {
+    list-style-type: none;
+}
+
+.fullwidth {
+    padding: 20px; 
+    display: flex;
+    box-sizing: border-box;
+    flex: 1;
+    flex-direction: column; /* Ensures content within fullwidth also follows a column layout */
+}
+
+.sun {
+    fill: currentColor; 
+    width: 30px; 
+    height: 30px;
+}
+
+.container {
+    margin: 0 auto; 
+    background: white; 
+    padding: 20px;
+    box-shadow: 0 2px 4px rgba(0,0,0,0.2); 
+    border-radius: 8px; 
+    width: 75%;
+}
+
+.data-section, .interaction-section {
+    margin: 20px 0;
+    width:100%;
+}
+
+.form-group {
+    margin-bottom: 20px; 
+    padding-right: 0px;
+    margin-right: 0px;
+}
+
+.input, .data-form input[type="text"], .data-form input[type="password"], .data-form input[type="submit"] {
+    padding: 10px;
+    margin-top: 5px; 
+    width: calc(100% - 22px); 
+    box-sizing: border-box;
+    border: 1px solid #ccc;
+    border-radius: 4px;
+}
+
+.data-form input[type="submit"] {
+    background-color: #0056b3;
+    color: white;
+    border: none;
+    cursor: pointer;
+    transition: background-color 0.3s ease;
+}
+
+.data-form input[type="submit"]:hover {
+    background-color: #003d82;
+}
+
+.footer-links {
+    padding: 10px 20px; 
+    background-color: #333; 
+    color: white; 
+    box-shadow: 0 -2px 4px rgba(0,0,0,0.1); 
+    margin: 0;
+    justify-content: center; 
+    list-style-type: none;
+    display: flex;
+    flex-direction: row;
+}
+
+.footer-links li {
+    margin: 0 10px;
+}
+
+.divider {
+    text-align: center;
+    margin: 20px 0;
+}
+
+/* Base style for all buttons */
+#otherInteractions {
+    display: flex;
+    flex-direction: row;
+    justify-content: space-evenly;
+}
+
+#otherInteractions button {
+    padding: 10px 20px;
+    font-size: 16px;
+    border: none;
+    border-radius: 5px;
+    cursor: pointer;
+    transition: background-color 0.3s ease, transform 0.2s ease;
+    margin: 5px 0; /* Adds a little space between buttons */
+}
+
+/* Individual styles for each button */
+#otherInteractions button:nth-child(1) {
+    background-color: #d9534f; /* Red */
+    color: white;
+}
+
+#otherInteractions button:nth-child(2) {
+    background-color: #5cb85c; /* Green */
+    color: white;
+}
+
+#otherInteractions button:nth-child(3) {
+    background-color: #f0ad4e; /* Yellow */
+    color: white;
+}
+
+/* Hover effect for all buttons */
+#otherInteractions button:hover {
+    background-color: #ccc; /* Changes background color on hover */
+    transform: scale(1.05); /* Slightly increase the size */
+}
+
+/* Specific hover styles can also be added for each button if desired */
+
+
+@media (max-width: 768px) {
+    #copyright {
+        display: none;
+    }
+
+    #otherInteractions {
+        flex-direction: column;
+    }
+}
