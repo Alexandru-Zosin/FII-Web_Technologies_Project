@@ -1,13 +1,13 @@
 html {
     height: 100vh;
 }
+
 body {
     margin: 0;
     padding: 0;
     display: flex;
     flex-direction: column;
     justify-content: space-between;
-    /* overflow-x: hidden; */
     font-family: Arial, sans-serif;
     background-color: #f0f0f0; 
     height: 100vh;
@@ -31,10 +31,10 @@ body {
 
 .fullwidth {
     padding: 20px; 
+    display: flex;
     box-sizing: border-box;
     flex: 1;
-    display: flex;
-    flex-direction: column; /* Ensures content within fullwidth also follows a column layout */
+    flex-direction: column; 
 }
 
 .sun {
@@ -105,7 +105,6 @@ body {
     margin: 20px 0;
 }
 
-/* Base style for all buttons */
 #otherInteractions {
     display: flex;
     flex-direction: row;
@@ -119,33 +118,28 @@ body {
     border-radius: 5px;
     cursor: pointer;
     transition: background-color 0.3s ease, transform 0.2s ease;
-    margin: 5px 0; /* Adds a little space between buttons */
+    margin: 5px 0;
 }
 
-/* Individual styles for each button */
 #otherInteractions button:nth-child(1) {
-    background-color: #d9534f; /* Red */
+    background-color: #d9534f;
     color: white;
 }
 
 #otherInteractions button:nth-child(2) {
-    background-color: #5cb85c; /* Green */
+    background-color: #5cb85c;
     color: white;
 }
 
 #otherInteractions button:nth-child(3) {
-    background-color: #f0ad4e; /* Yellow */
+    background-color: #f0ad4e;
     color: white;
 }
 
-/* Hover effect for all buttons */
 #otherInteractions button:hover {
-    background-color: #ccc; /* Changes background color on hover */
-    transform: scale(1.05); /* Slightly increase the size */
+    background-color: #ccc;
+    transform: scale(1.05);
 }
-
-/* Specific hover styles can also be added for each button if desired */
-
 
 @media (max-width: 768px) {
     #copyright {
@@ -153,18 +147,6 @@ body {
     }
 
     #otherInteractions {
-        display: flex;
         flex-direction: column;
     }
 }
-
-@media (max-width: 480px) {
-    .container, .fullwidth {
-        padding: 5px;
-    }
-
-    .form-group label, .form-group input, .interaction-section button {
-        font-size: 14px;
-    }
-}
-
