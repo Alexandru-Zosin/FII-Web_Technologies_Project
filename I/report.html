@@ -1,44 +1,13 @@
 <!DOCTYPE html>
 <!--Validated through w3.org-->
-<!--CTRL+F: "WIP"-->
 <html lang="en">
 
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>ARS for ResourceFinder</title>
-    <style>
-        h1,
-        h2,
-        h3,
-        h4,
-        h5,
-        h6 {
-            color: darkblue;
-        }
-
-        li {
-            margin-top: 1%;
-        }
-
-        .flex-container {
-            display: flex;
-            justify-content: space-around;
-        }
-
-        .image-title {
-            margin-top: auto;
-            margin-bottom: auto;
-            font-style: italic;
-        }
-
-        .image {
-            border-radius: 1%;
-            height: auto;
-            width: 50%;
-            max-width: 50%;
-        }
-    </style>
+    <link rel="stylesheet" href="reportstyle.css" />
+    
 </head>
 
 <body>
@@ -88,9 +57,9 @@
         <h2>2. Overall Description</h2>
         <article id="product-perspective">
             <h3>2.1 Product Perspective</h3>
-            <p>This platform is a pioneering, standalone product designed to significantly enhance the accessibility and
+            <p>This platform is designed to enhance the accessibility and
                 usability of resources for creative programming. It serves as an intermediary between developers and a
-                vast array of educational and practical resources, utilizing cutting-edge natural language processing to
+                 list of educational and practical resources, utilizing natural language processing to
                 offer tailored recommendations. The system's uniqueness lies in its ability to interconnect with both
                 local databases and external APIs like OpenAI, providing a seamless integration for users seeking to
                 advance their programming skills in creative and innovative ways.
@@ -156,12 +125,11 @@
             <p>The platform will interface with the OpenAI API for processing natural language queries. The backend
                 database will be MySQL and will structure the data according to schema.org recommendations,
                 whereas the server-side logic will be implemented in Node.js.
-                (WIP other technologies)
             </p>
         </article>
     </section>
     <section>
-        <h2>4. System Features and Requirements(WIP)</h2>
+        <h2>4. System Features and Requirements</h2>
         <article id="personalized-recommendations">
             <h3>4.1 Personalized Recommendations</h3>
             <p>Users can input their project goals into a form, which is processed in natural language by the OpenAI
@@ -172,7 +140,7 @@
         <article id="resource-management">
             <h3>4.2 Resource Submission and Management</h3>
             <p>Authenticated users have the ability to submit resources to the platform. Each submission will require
-                the following information: (WIP)
+                the following information:
             </p>
             <ul>
                 <li>Title of the resource</li>
@@ -193,7 +161,7 @@
         <article id="administrator-capabilities">
             <h3>4.4 Administrator Capabilities</h3>
             <p>Administrators have access to a dashboard for supervising platform activity. This includes user
-                management, resource approval(WIP), and other system settings. Features include:
+                management, resource approval and other system settings. Features include:
             </p>
             <ul>
                 <li>User account creation, suspension, and deletion</li>
@@ -203,15 +171,15 @@
         </article>
     </section>
     <section>
-        <h2>5. Other Nonfunctional Requirements(WIP)</h2>
+        <h2>5. Other Nonfunctional Requirements</h2>
         <article id="security">
             <h3>5.1 Security</h3>
-            <p>Security measures will include protection against SQL injection, XSS? ...
+            <p>Security measures will include protection against SQL injection, XSS, Directory Traversal and Buffer Overflow attacks.
                 Secure API integration, GDPR compliance and user data protection are other priorities.</p>
         </article>
     </section>
     <footer>
-        <h2>(WIP)</h2>
+        <p>&copy; 2024 ResourceFinder 2E1 Team. All rights reserved.</p>
     </footer>
 </body>
 
