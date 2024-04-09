@@ -1,5 +1,6 @@
 html {
     height: 100vh;
+    font-size: 16px;
 }
 
 body {
@@ -42,13 +43,14 @@ body {
     display: flex;
     flex-direction: column;
     align-items: center;
-    justify-content: center;
+    gap: 1rem;
     margin: 0 auto; 
     background: white; 
     padding: 20px;
     box-shadow: 0 2px 4px rgba(0,0,0,0.2); 
     border-radius: 8px; 
     width: 75%;
+    padding-bottom: 3%;
 }
 
 .textarea-container {
@@ -57,11 +59,33 @@ body {
     max-width: 800px;
 }
 
+.answers-container {
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    gap: 2rem;
+}
+
+.answer {
+    width: 80%;
+    max-width: 800px;
+    background-color: #ccc;
+    border-radius: 10px;
+    padding: 0px 10px;
+}
+
+.icon {
+    width: 1.3rem;
+    height: auto;
+    margin-right: 5px;
+    vertical-align: bottom;
+    border-radius: 20%;
+}
+
 textarea {
     width: 100%;
     padding: 10px;
     padding-right: 50px;
-    margin-bottom: 10px;
     border: 1px solid #ccc;
     border-radius: 5px;
     resize: vertical;
@@ -71,8 +95,8 @@ textarea {
 
 button {
     position: absolute;
-    bottom: 15px;
-    right: 0;
+    bottom: 6px;
+    right: 1px;
     padding: 10px 10px;
     border: none;
     background-color: #007bff;
@@ -112,7 +136,6 @@ button:hover {
         display: none;
     }
 }
-
 
 .loader {
     width: 30px;
