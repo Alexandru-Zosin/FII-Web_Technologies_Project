@@ -34,7 +34,7 @@ body {
     display: flex;
     box-sizing: border-box;
     flex: 1;
-    flex-direction: column; 
+    flex-direction: column;
 }
 
 .sun {
@@ -58,7 +58,7 @@ body {
 }
 
 .form-group {
-    margin-bottom: 20px; 
+    margin-bottom: 20px;
     padding-right: 0px;
     margin-right: 0px;
 }
