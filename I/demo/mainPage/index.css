@@ -137,9 +137,13 @@ button:hover {
     }
 }
 
+/* https://github.com/validator/validator/issues/1406 - 
+the definition of ratio in the css validator is outdated
+*/
+
 .loader {
     width: 30px;
-    aspect-ratio: 1;
+    aspect-ratio: 1; 
     display: grid;
     border: 4px solid #0000;
     border-radius: 50%;

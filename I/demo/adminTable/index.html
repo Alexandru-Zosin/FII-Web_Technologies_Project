@@ -1,5 +1,7 @@
 <!DOCTYPE HTML>
+
 <html lang="en">
+
 <head>
     <meta name="viewport" content="width=device-width, initial-scale=1">
     <link rel="stylesheet" href="./index.css">
@@ -38,38 +40,26 @@
             </li>
         </ul>
     </nav>
+
     <main class="fullwidth">
-        <div class="container">
-            <div id='changeData' class="data-section">
-                <form class="data-form">
-                    <div class="form-group">
-                        <label for="email">New Email</label><br>
-                        <input type="text" id="email" name="email" placeholder="email@example.com"><br>
-                    </div>
-                    <div class="form-group">
-                        <label for="pass">New password</label><br>
-                        <input type="password" id="pass" name="pass"><br>
-                    </div>
-                    <div class="form-group">
-                        <label for="openAiKey">OpenAI token</label><br>
-                        <input type="text" id="openAiKey" name="openAiKey"><br>
-                    </div>
-                    <div class="form-group">
-                        <label for='confirmCurrentPassword'>Confirm Current Password</label><br>
-                        <input type="password" id="confirmCurrentPassword" name='confirmCurrentPassword'><br>
-                    </div>
-                    <div class="form-group">
-                        <input type="submit" value="Submit">
-                    </div>
-                </form>
+        <div class="grid-container">
+            <div class="grid-header">
+                <div class="grid-cell">ID</div>
+                <div class="grid-cell">Name</div>
+                <div class="grid-cell">Age</div>
+                <div class="grid-cell">Country</div>
             </div>
-
-            <div class="divider">OR</div>
-
-            <div id="otherInteractions" class="interaction-section">
-                <button> Delete Account </button>
-                <button> Export Data </button>
-                <button> Reset Password </button>
+            <div class="grid-row">
+                <div class="grid-cell">1</div>
+                <div class="grid-cell">John Doe</div>
+                <div class="grid-cell">30</div>
+                <div class="grid-cell">USA</div>
+            </div>
+            <div class="grid-row">
+                <div class="grid-cell">2</div>
+                <div class="grid-cell">Jane Smith</div>
+                <div class="grid-cell">25</div>
+                <div class="grid-cell">Canada</div>
             </div>
         </div>
     </main>
