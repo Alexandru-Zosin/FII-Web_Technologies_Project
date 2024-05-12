@@ -1,0 +1,123 @@
+Processing [Cross-platform] - Computer programming language and IDE for visual arts.
+Cinder [Cross-platform] - Open source library for professional-quality creative coding in C++.
+openFrameworks [Cross-platform] - Open source C++ toolkit for creative coding.
+C4 [iOS] - Open-source creative coding framework for iOS.
+Unity [Mac, Win] - Game engine, but useful for creative coding and installations.
+Godot [Cross-platform] - Open source game engine, that can also be used for all sorts of things.
+PlayCanvas [Cross-platform] - Open source, realtime collaborative WebGL engine.
+hg_sdf [Cross-platform] - GLSL library for building signed distance functions.
+nannou [Cross-platform] - Open-source creative coding framework for the Rust language.
+thi.ng [Cross-platform] - Open source collection of computational design tools for JavaScript, TypeScript, Clojure and ClojureScript languages.
+PixelKit [iOS, Mac] - Open source, live graphics, Swift framework, powered by Metal.
+OPENRNDR [Cross-platform] - Open source library for creative coding written in Kotlin.
+Phaser [Cross-platform] - HTML5 framework for building games, uses both a Canvas and WebGL renderer.
+Canvas-sketch [Cross-platform] - HTML5 framework for making generative artwork in JavaScript and the browser.
+AsyncGraphics [iOS, macOS] - Open source, live graphics, async / await, Swift package, powered by Metal.
+Lygia [Cross-platform] - Granular and multi-language (GLSL, HLSL, WGSL, MSL and CUDA) shader library designed for performance and flexibility.
+Fragment.tools [Cross-platform] - A web development environment for creative coding.
+vvvv [Win] - Hybrid visual/textual live-programming environment for easy prototyping and development.
+NodeBox [Mac, Win] - Cross-platform, node-based GUI for efficient data visualizations and generative design.
+TouchDesigner [Mac, Win] - Visual development platform to create realtime projects.
+Quartz Composer [Mac] - Development tool for processing and rendering graphical data.
+Vuo [Mac] - Live interactive-media programming environment.
+Max [Mac, Win] - Visual programming language for media.
+Pure Data [Cross-platform] - Open source visual programming language for multimedia.
+ossia score [Cross-platform] - Interactive, intermedia audio-visual sequencer.
+tooll [Win] - Open source tool for creating interactive 3d content and animations.
+XOD [Cross-platform] - Open source visual programming language and environment for microcontroller-based projects.
+Isadora [Cross-platform] - Scene based media control software with integrated projection mapper.
+cables [Cross-platform/Web] - Your model kit for creating beautiful interactive content. Currently in private beta, invites can be requested.
+eternal [Web] - Programs as graphs and graphs as compositional tools for creation
+Notch Builder [Win] - Node-based authoring tool with a strong focus on real-time graphics. Currently in beta.
+JOY.JS - Realtime visual coding tool, easy to understand and aimed at beginners.
+Circles [iPhone, iPad, Mac] - Live graphics node editor, powered by AsyncGraphics.
+TIC-80 - Make pixel art style games and art on a 240*136 pixel screen.
+SuperCollider [Multi-platform] - Platform for audio synthesis and algorithmic composition.
+ChucK - Strongly-timed, concurrent, and on-the-fly music programming language.
+TidalCycles - Domain specific language for live coding of pattern.
+Sonic Pi - The live coding music synth for everyone.
+Csound - A sound and music computing system.
+Orca - Live coding environment to quickly create procedural sequencers.
+handel - A small procedural programming language for writing songs in browser.
+Overtone - An open source audio environment designed to explore new musical ideas from synthesis and instrument building to live-coding.
+Melrōse - A MIDI producing environment for creating (live) music.
+Glicol - Graph-oriented live coding language and music/audio DSP library written in Rust.
+three.js - JavaScript 3D library.
+regl - Functional WebGL.
+Stackgl - Open software ecosystem for WebGL, built on top of browserify and npm.
+Paper.js - The swiss army knife of vector graphics scripting.
+Pixi.js - HTML 5 2D rendering engine that uses webGL with canvas fallback.
+p5.js - JavaScript library that starts with the original goal of Processing.
+Pts.js - JavaScript library for visualization and creative-coding.
+Fabric.js - Javascript canvas library, SVG-to-canvas parser.
+Maker.js - Parametric line drawing for SVG, CNC & laser cutters.
+OpenJSCAD - Programmatic 3D modeling in JavaScript.
+Sketch.js - Minimal JavaScript creative coding framework.
+Two.js - Two-dimensional drawing api geared towards modern web browsers.
+ClayGL - WebGL graphic library for building scalable Web3D applications.
+Proton - A lightweight and powerful javascript particle engine.
+lightgl.js - A lightweight WebGL library.
+picogl.js - A minimal WebGL 2 rendering library.
+Alfrid - A WebGL tool set.
+Babylon.js - complete JavaScript framework for building 3D games with HTML 5 and WebGL.
+twigl - A Tiny WebGL helper Library.
+luma.gl - WebGL2 Components for Data Visualization.
+css-doodle - A web component for drawing patterns with CSS.
+OGL.js - JavaScript 3D library (WebGL).
+Zdog - A pseudo-3D engine for canvas & SVG.
+Oimo.js - Lightweight 3d physics engine for javascript
+Ammo.js - Direct port of the Bullet physics engine to JavaScript using Emscripten.
+Theatre.js - Motion design library with visual tools
+GraphicsJS - A lightweight open-source JavaScript library for graphics and animations (SVG/VML).
+Projection Mapping • VJing
+MadMapper [Mac] - Video mapping projections and Light mapping.
+VDMX [Mac] - Realtime multimedia performance application.
+Modul8 [Mac] - Real time video mixing and compositing.
+Resolume [Mac, Win] - Mixing of digital video and effects in a realtime.
+CoGe VJ [Mac] - VJ software designed for realtime HD video mixing and compositing with a modular user interface.
+VirtualMapper - Realtime preview tool for projection mapping.
+Millumin [Mac] - A software to create and perform interactive audiovisual shows.
+Smode [Win] - A real-time 2D/3D creation, compositing and video-mapping engine.
+Veejay [Linux] - A live performance tool featuring simple non-linear editing and mixing from multiple sources (files, devices, streams...)
+Shadertoy - Build and share shaders with the world and get inspired.
+Shader Park - A JavaScript library for creating interactive procedural 2D and 3D shaders.
+GLSL Sandbox - Online shader editor and gallery.
+Shdr Editor - Online shader editor.
+CodePen - Show case of advanced techniques with editable source code.
+Shadershop - Interface for programming GPU shaders.
+Vertexshaderart - Online shader editor and gallery.
+Cyos - Online shader editor.
+GlslEditor - Simple WebGL Fragment Shader Editor.
+OpenProcessing - Create and experiment with algorithmic design, Processing and P5.js.
+P5.js Editor - Online web editor for P5.js.
+LiveCodeLab - Run-as-you-type tool for VJs, musicians, teachers, students, kids.
+Turtletoy - Minimalistic API and online showcase for generative code. (Javascript)
+ShaderGif - Open source home for art made with code (WebGL1/2, JavaScript Canvas & P5.js).
+P5LIVE - p5.js live-coding environment.
+NEORT - Digital art platform for creative coders (Fragment Shader, Javascript Canvas).
+Shelly - Learn programming by issuing instructions to a turtle.
+tixy.land - The most minimalist creative coding environment is alive.
+BBC Micro bot - Run your tweet on an 8-bit computer emulator.
+Hydra - Live code-able video synth and coding environment.
+Arduino - Open source microcontroller kits for building digital devices and interactive objects.
+Raspberry Pi - Small single-board computers.
+Puck.js - Open source JavaScript microcontroller you can program wirelessly.
+BeagleBoard - Low-power open source single-board computers.
+Makey Makey - Turn everyday objects into touchpads and combine them with the internet.
+Leap Motion - Sensor device that supports hand and finger motions as input.
+AxiDraw - Simple, modern, and precise pen plotter.
+Phidgets - Sensors, input devices and controllers for computers.
+Teensy - USB-based microcontroller development system.
+Lightform - AR projection mapping with built-in depth sensor.
+Structure Synth [Cross-platform] - Application for generating 3D structures by specifying a design grammar.
+F3 [Mac] - Powerful 3D design app that enables you to live code 3D form.
+Fragment [Mac]- App to live code GLSL graphics.
+ShaderTool [Win] - Modern shader IDE for programmers and FX artists.
+Syphon [Mac] - Allows applications to share frames with one another in realtime.
+KodeLife - Real-time GPU shader editor, live-code performance tool and graphics prototyping sketchpad.
+ISF - GLSL shaders for use in interactive applications.
+glslViewer - Live-coding console tool that renders GLSL Shaders.
+DrawBot [Mac] - Education oriented 2d graphics programming environment based on python.
+Klak - A collection of scripts for creative coding with Unity.
+basil.js - Scripting (JS) in InDesign for designers and artists in the spirit of Processing.
+Konstrukt [Cross-platform] - A commandline tool to generate different scaleable patterns as SVGs.

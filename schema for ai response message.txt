@@ -1,0 +1,47 @@
+{
+  "version": "1.0",
+  "attributes": {
+    "Platform": {
+      "type": "Array of Strings",
+      "description": "Supported operating systems or environments.",
+      "values": ["Cross-platform", "iOS", "Mac", "Windows", "Web", "Linux", "Multi-platform", "Android"]
+    },
+    "Language": {
+      "type": "Array of Strings",
+      "description": "Programming languages primarily used or supported.",
+      "values": ["C++", "JavaScript", "Swift", "Rust", "Kotlin", "HTML5", "TypeScript", "Clojure", "GLSL", "HLSL", "WGSL", "MSL", "CUDA", "Python", "Java"]
+    },
+    "Type": {
+      "type": "Array of Strings",
+      "description": "Categorization as a framework, library, SDK, engine, tool, IDE, API, or editor.",
+      "values": ["Framework", "Library", "SDK", "Engine", "IDE", "Tool", "Environment", "API", "Editor"]
+    },
+    "Purpose": {
+      "type": "Array of Strings",
+      "description": "Primary use case or domain of application.",
+      "values": ["Game Development", "Visual Arts", "Data Visualization", "Audio Production", "Video Mapping", "Generative Design", "3D Modeling", "Live Graphics", "Particle Effects", "Projection Mapping"]
+    },
+    "Rendering": {
+      "type": "Array of Strings",
+      "description": "Types of rendering technology supported.",
+      "values": ["WebGL", "Metal", "Canvas", "SVG", "Vulkan", "DirectX", "OpenGL", "WebGL2"]
+    },
+    "License": {
+      "type": "Array of Strings",
+      "description": "Type of licensing model.",
+      "values": ["Open Source", "Commercial", "Freemium"]
+    },
+    "Realtime Collaboration": {
+      "type": "Boolean",
+      "description": "Indicates if the tool supports real-time collaborative features."
+    },
+    "Interactivity": {
+      "type": "Boolean",
+      "description": "Specifies if the tool is geared towards or supports interactive media creation."
+    },
+    "Live Coding": {
+      "type": "Boolean",
+      "description": "Indicates if the tool supports live coding, essential for live performances and real-time iterative design."
+    }
+  }
+}
