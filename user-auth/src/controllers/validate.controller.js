@@ -1,4 +1,5 @@
 const { decrypt } = require('../../utils/crypting');
+const { PORTS } = require('../../whitelistports');
 
 function validate(req, res) {
     const cookies = {};
@@ -20,7 +21,7 @@ function validate(req, res) {
 
     try {
         const decryptedToken = decrypt(sessionToken, process.env.SECRET_KEY);
-        const [userId, role, expiration, hash] = decryptedToken.split('|');
+        const [userId, role, expiration, openAiKey] = decryptedToken.split('|');
 
         if (Date.now() > parseInt(expiration)) {
             res.writeHead(401, { 'Content-Type': 'application/json' });
@@ -30,18 +31,19 @@ function validate(req, res) {
         }
 
         res.writeHead(200, { 'Content-Type': 'application/json' });
-        switch (role) {
-            case 'admin':
-                res.end(JSON.stringify({ userId, role}));
+        switch (req.connection.remotePort) {
+            case PORTS.admin:
+                res.end(JSON.stringify({ userId, role }));
                 break;
-            case 'user':
-                res.end(JSON.stringify({ userId, role}));
+            case PORTS.front:
+                res.end(JSON.stringify({ userId, role }));
                 break;
-            case 'openai':
-                res.end(JSON.stringify({ openAiKey: hash }));
+            case PORTS.openAI:
+                res.end(JSON.stringify({ openAiKey }));
                 break;
             default:
-                res.end(JSON.stringify({ error: 'Invalid role' }));
+                res.end(JSON.stringify({ openAiKey }));
+                break;
         }
     } catch (error) {
         res.writeHead(500, { 'Content-Type': 'application/json' });

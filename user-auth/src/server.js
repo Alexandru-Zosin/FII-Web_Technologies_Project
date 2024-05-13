@@ -3,6 +3,7 @@ const { login } = require('./controllers/login.controller');
 const { signup } = require('./controllers/signup.controller');
 const { logout } = require('./controllers/logout.controller');
 const { validate } = require('./controllers/validate.controller');
+const { PORTS } = require('../whitelistports');
 const PORT = 3000;
 
 require('dotenv').config({ path: require('path').join(__dirname, './.env') });
@@ -23,7 +24,17 @@ function parseJSON(req, res, next) { // middleware
     });
 }
 
+function validatePORT(req) {
+    const requestPort = req.connection.remotePort;
+    const allowedPorts = Object.values(PORTS);
+    if (allowedPorts.includes(requestPort))
+        return true;
+    else
+        return false;
+}
+
 const server = http.createServer((req, res) => { // requestListener
+    //if (validatePORT(req) && req.method === 'POST') {
     if (req.method === 'POST') {
         parseJSON(req, res, () => {
             switch (req.url) {
