@@ -58,7 +58,17 @@ const server = http.createServer((req, res) => { // requestListener
                     break;
             }
         });
-    } else {
+    } else if (req.method == 'OPTIONS') {
+        res.writeHead(204, {
+            'Access-Control-Allow-Origin': 'http://localhost', // Adjust the allowed origin
+            'Access-Control-Allow-Methods': 'POST, OPTIONS',
+            'Access-Control-Allow-Headers': 'Content-Type, Accept',
+            'Access-Control-Allow-Credentials': 'true',
+            'Content-Length': '0'
+        });
+        res.end();
+    } 
+    else {
         res.writeHead(404, { 'Content-Type': 'application/json' });
         res.end(JSON.stringify({
             error: 'Not found.'

@@ -8,7 +8,10 @@ async function login(req, res) {
     const user = await findUserByUsername(username); // internal server occured try catch block
 
     if (!user || user.password !== hashedPassword) {
-        res.writeHead(401, { 'Content-Type': 'application/json' });
+        res.writeHead(401, {
+            'Content-Type': 'application/json',
+            'Access-Control-Allow-Origin': 'http://localhost'
+        });
         return res.end(JSON.stringify({
             error: 'Unauthorized.'
         }));
@@ -32,8 +35,10 @@ async function login(req, res) {
         'Set-Cookie': [
             `default=${token}; HttpOnly; Secure`,
             `dark_theme=${user.darkPreference}; Path=/; Secure`
-        ]
+        ],
+        'Access-Control-Allow-Origin': 'http://localhost'
     });
+
     return res.end(JSON.stringify({
         message: 'Login successful'
     }));
