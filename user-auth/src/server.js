@@ -1,9 +1,11 @@
 const http = require('http');
-const { login } = require('./models/user.model');
+const { login } = require('./controllers/login.controller');
 const { signup } = require('./controllers/signup.controller');
 const { logout } = require('./controllers/logout.controller');
 const { validate } = require('./controllers/validate.controller');
 const PORT = 3000;
+
+require('dotenv').config({ path: require('path').join(__dirname, './.env') });
 
 function parseJSON(req, res, next) { // middleware
     let data = '';
@@ -13,11 +15,11 @@ function parseJSON(req, res, next) { // middleware
     req.on('end', () => {
         try {
             req.body = JSON.parse(data); // string to json
-            next();
         } catch (err) {
             res.writeHead(400, { 'Content-Type': 'application/json' });
             res.end(JSON.stringify({ error: 'Invalid JSON format.' }));
         }
+        next();
     });
 }
 

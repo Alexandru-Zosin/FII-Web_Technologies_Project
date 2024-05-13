@@ -1,7 +1,7 @@
-const { registerUser } = require('../models/user');
-const { hashWithKey } = require('../../utils/hashWithKey');
+const { registerUser } = require('../models/user.model');
+const { hashWithKey } = require('../../utils/crypting');
 
-function signup(req, res) {
+async function signup(req, res) {
     const { username, password } = req.body;
 
     // other validation logic, to be discussed
@@ -12,19 +12,18 @@ function signup(req, res) {
         }));
     }
 
-    const hashedPassword = hashWithKey(password, secretKey);
+    const hashedPassword = hashWithKey(password, process.env.HASH_KEY);
     const userData = {
         username: username,
         password: hashedPassword,
     };
 
-    registerUser(userData, (err, userCreated) => {
-        if (err) {
-            res.writeHead(500, { 'Content-Type': 'application/json' });
-            return res.end(JSON.stringify({
-                error: 'Internal server error'
-            }));
-        }
+    try {
+        const userCreated = await new Promise(async (resolve) => {
+            const isUserRegistered = await registerUser(userData);
+            resolve(isUserRegistered);
+        });
+
         if (!userCreated) {
             res.writeHead(409, { 'Content-Type': 'application/json' });
             return res.end(JSON.stringify({
@@ -32,10 +31,15 @@ function signup(req, res) {
             }));
         }
         res.writeHead(201, { 'Content-Type': 'application/json' });
-        res.end(JSON.stringify({
+        return res.end(JSON.stringify({
             message: 'User registered successfully. Please log in.'
         }));
-    });
+    } catch (err) {
+        res.writeHead(500, { 'Content-Type': 'application/json' });
+        return res.end(JSON.stringify({
+            error: 'Internal server error'
+        }));
+    }
 }
 
 module.exports = { signup };

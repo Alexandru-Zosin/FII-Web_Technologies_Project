@@ -1,41 +1,55 @@
 const mysql = require('mysql');
-const connection = mysql.createConnection({
-    host: '',
-    user: '',
+
+const pool = mysql.createPool({
+    connectionLimit: 10,
+    host: 'localhost',
+    user: 'root',
     password: '',
-    database: ''
+    database: 'test'
 });
 
-connection.connect((err) => {
-    if (err)
-        throw err; // callback function that would return a 500/503 code
-    console.log('Connected to the database successfully!');
-});
-
-function findUserByUsername(username, callback) {
-    const query = 'SELECT * FROM users WHERE username = ?'; // this should be in a separate file
-    connection.query(query, [username], (err, result) => {
-        if (err)
-            return callback(err, null);
-        else
-            callback(null, result[0]);
+async function getConnectionFromPool() {
+    return await new Promise((res) => {
+        pool.getConnection((err, conn) => {
+            res(conn);
+        });
     });
 }
 
-function registerUser(userData, callback) {
-    findUserByUsername(userData.username, (err, results) => {
-        if (err)
-            return callback(err, false);
-        if (results.length > 0) { // user already exists
-            return callback(null, false);
-        }
+async function findUserByUsername(username) {
+    const connection = await getConnectionFromPool();
+    const query = 'SELECT * FROM test WHERE username = ?'; // this should be in a separate file
+    const user = await new Promise((res, rej) => {
+        connection.query(query, [username], (err, result) => { // try catch in caz de eroare DB
+            if (err)
+                rej(err);
+            else
+                res(result[0]);
+        });
     });
-    const query = 'INSERT INTO users (username, password) VALUES (?, ?)';
-    connection.query(query, [userData.username, userData.password], (err, results) => {
+    connection.release();
+    return user;
+}
+
+async function registerUser(userData) {
+    const user = await findUserByUsername(userData.username); 
+    
+    if (user != null) {
+        return false;
+    }
+    
+    const connection = await getConnectionFromPool();
+    const query = 'INSERT INTO test (username, password) VALUES (?, ?)';
+    const isRegisterSuccessful = await new Promise((res) => {
+        connection.query(query, [userData.username, userData.password], (err, results) => {
         if (err)
-            return callback(err);
-        callback(null, true);
+            res(false);
+        else
+            res(true);
+        });
     });
+    connection.release();
+    return isRegisterSuccessful;
 }
 
 module.exports = { findUserByUsername, registerUser };

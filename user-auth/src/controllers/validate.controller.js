@@ -32,10 +32,10 @@ function validate(req, res) {
         res.writeHead(200, { 'Content-Type': 'application/json' });
         switch (role) {
             case 'admin':
-                res.end(JSON.stringify({ userId, role, permissions: 'all' }));
+                res.end(JSON.stringify({ userId, role}));
                 break;
             case 'user':
-                res.end(JSON.stringify({ userId, role, permissions: 'limited' }));
+                res.end(JSON.stringify({ userId, role}));
                 break;
             case 'openai':
                 res.end(JSON.stringify({ openAiKey: hash }));
