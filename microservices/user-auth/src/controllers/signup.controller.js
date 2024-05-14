@@ -32,12 +32,12 @@ async function signup(req, res) {
         }
         res.writeHead(201, { 'Content-Type': 'application/json' });
         return res.end(JSON.stringify({
-            message: 'User registered successfully. Please log in.'
+            message: 'User registered successfully.'
         }));
     } catch (err) {
         res.writeHead(500, { 'Content-Type': 'application/json' });
         return res.end(JSON.stringify({
-            error: 'Internal server error'
+            error: 'Internal server error.'
         }));
     }
 }

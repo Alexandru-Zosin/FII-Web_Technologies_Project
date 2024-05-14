@@ -32,7 +32,7 @@ async function login(req, res) {
 
     res.writeHead(200, {
         'Set-Cookie': [
-            `default=${token}; Path=/; SameSite=None; Secure;`,
+            `default=${token}; HttpOnly; Path=/; SameSite=None; Secure;`,
             `dark_theme=${user.darkPreference}; Path=/; SameSite=None; Secure;`
         ],
     });

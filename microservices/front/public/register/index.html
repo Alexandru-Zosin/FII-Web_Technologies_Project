@@ -5,6 +5,7 @@
     <meta name="viewport" content="width=device-width, initial-scale=1">
     <link rel="stylesheet" href="./index.css">
     <title>ReFi</title>
+    <script src="script.js" defer></script>
 </head>
 
 <body>
@@ -42,7 +43,7 @@
     <main class="fullwidth">
         <div class="container">
             <div id='changeData' class="data-section">
-                <form class="data-form">
+                <div class="data-form">
                     <div class="form-group">
                         <label for="email">Email</label><br>
                         <input type="text" id="email" name="email" placeholder="email@example.com"><br>
@@ -56,9 +57,9 @@
                         <input type="password" id="confirmCurrentPassword" name='confirmCurrentPassword'><br>
                     </div>
                     <div class="form-group">
-                        <input type="submit" value="Submit">
+                        <input type="submit" id="submit-button" value="Submit">
                     </div>
-                </form>
+                </div>
             </div>
         </div>
     </main>

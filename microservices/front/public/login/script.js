@@ -15,5 +15,10 @@ document.getElementById("submit-button").addEventListener('click', async () => {
             password
         }),
     });
-    console.log(await response.json());
+
+    if (response.status === 200) {
+        window.location.href = "https://localhost/mainPage/index.html";
+    } else {
+        window.alert("Login failed.");
+    }
 });
