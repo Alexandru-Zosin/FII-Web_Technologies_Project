@@ -2,7 +2,32 @@ const { retrieveEnvValue } = require('./envValueRetrieval.controller.js');
 const fetch = require('node-fetch');
 const url = require('url');
 // strategy make 3 requests at maximum and then we stop any requests (basically try 3 times to get a valid message from the ai)
+
+const applyCorsHeadersOnRequest = async (req, res) => {
+    validateHeadersForCors(req, res);
+    res.writeHead(204, {
+        'Content-Length': '0'
+    });
+    res.end();
+}
+
+const validateHeadersForCors = async (req, res) => {
+    const requestOrigin = req.headers.origin;
+    if ('https://localhost' == requestOrigin) {
+        res.setHeader('Access-Control-Allow-Origin', requestOrigin);
+        res.setHeader('Access-Control-Allow-Methods', 'POST, OPTIONS');
+        res.setHeader('Access-Control-Allow-Headers', 'Content-Type, Accept');
+        res.setHeader('Access-Control-Allow-Credentials', 'true');
+        return true;
+    } else {
+        res.writeHead(403, { 'Content-Type': 'application/json' });
+        res.end(JSON.stringify({ error: 'Forbidden.' }));
+        return false;
+    }
+}
+
 const createFiltersFromPrompt = async (req, res) => {
+    validateHeadersForCors(req, res); // in order to add the headers to the response for the cors
     const parsedUrl = url.parse(req.url, true);  // `true` parses the query string into an object
     const query = parsedUrl.query;  // This contains the parsed query string as an object
     const prompt = query.prompt; 
@@ -20,8 +45,8 @@ const createFiltersFromPrompt = async (req, res) => {
     // if we manage to valide it the received json then we are on the track to respond with it
     const isJSONValid = true; // later the validation here
     if (isJSONValid) {
-        res.writeHead(200, {'Content-Type': 'application/json'});
-        res.end(responseJsonPayload.choices[0].message.content); 
+        res.writeHead(200, {'Content-Type': 'application/json', });
+        res.end(responseJsonPayload?.choices[0]?.message?.content); 
     } else {
         res.writeHead(405);
         res.end(JSON.stringify({message: "AI generation has failed multiple times, aborting"}));
@@ -114,5 +139,7 @@ const constructAskFromPrompt = (userPrompt, api_key) => {
 }
 
 module.exports = {
-    createFiltersFromPrompt
+    createFiltersFromPrompt,
+    validateHeadersForCors,
+    applyCorsHeadersOnRequest
 }
