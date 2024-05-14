@@ -1,3 +1,4 @@
-csr.pem
-key.pem
+*.pem
 .env
+node_modules/
+**/whitelistports.js
