@@ -10,7 +10,6 @@ async function login(req, res) {
     if (!user || user.password !== hashedPassword) {
         res.writeHead(401, {
             'Content-Type': 'application/json',
-            'Access-Control-Allow-Origin': 'http://localhost'
         });
         return res.end(JSON.stringify({
             error: 'Unauthorized.'
@@ -33,10 +32,9 @@ async function login(req, res) {
 
     res.writeHead(200, {
         'Set-Cookie': [
-            `default=${token}; HttpOnly; Secure`,
-            `dark_theme=${user.darkPreference}; Path=/; Secure`
+            `default=${token}; Path=/; SameSite=None; Secure;`,
+            `dark_theme=${user.darkPreference}; Path=/; SameSite=None; Secure;`
         ],
-        'Access-Control-Allow-Origin': 'http://localhost'
     });
 
     return res.end(JSON.stringify({

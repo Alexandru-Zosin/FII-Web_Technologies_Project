@@ -2,9 +2,10 @@ document.getElementById("submit-button").addEventListener('click', async () => {
     const username = document.getElementById("email").value;
     const password = document.getElementById("pass").value;
 
-    const response = await fetch("http://localhost:3000/login", {
+    const response = await fetch("https://localhost:3000/login", {
         method: "POST",
-        mode: "cors", // no-cors, *cors, same-origin
+        credentials: 'include', // https://reqbin.com/code/javascript/lcpj87js/javascript-fetch-with-credentials
+        mode: "cors",
         headers: {
             "Accept": "application/json",
             "Content-Type": "application/json",

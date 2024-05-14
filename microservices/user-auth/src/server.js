@@ -1,9 +1,10 @@
-const http = require('http');
+const https = require('https');
+const fs = require('fs');
 const { login } = require('./controllers/login.controller');
 const { signup } = require('./controllers/signup.controller');
 const { logout } = require('./controllers/logout.controller');
 const { validate } = require('./controllers/validate.controller');
-const { PORTS } = require('../whitelistports');
+const { setCORSHeadersOnValidOrigin } = require('../utils/corsHeaders');
 const PORT = 3000;
 
 require('dotenv').config({ path: require('path').join(__dirname, './.env') });
@@ -24,17 +25,23 @@ function parseJSON(req, res, next) { // middleware
     });
 }
 
-function validatePORT(req) {
-    const requestPort = req.connection.remotePort;
-    const allowedPorts = Object.values(PORTS);
-    if (allowedPorts.includes(requestPort))
-        return true;
-    else
-        return false;
+let options;
+if (process.env.DEBUG_MODE == 'true') {
+    options = {
+        key: fs.readFileSync(process.env.DEBUG_KEY_PATH, 'utf8'),
+        cert: fs.readFileSync(process.env.DEBUG_CERT_PATH, 'utf8')
+    };
+} else {
+    options = {
+        key: fs.readFileSync(process.env.KEY_PATH, 'utf8'),
+        cert: fs.readFileSync(process.env.CERT_PATH, 'utf8')
+    };
 }
 
-const server = http.createServer((req, res) => { // requestListener
-    //if (validatePORT(req) && req.method === 'POST') {
+const server = https.createServer(options, (req, res) => { // requestListener
+    if (!setCORSHeadersOnValidOrigin(req, res))
+        return;
+
     if (req.method === 'POST') {
         parseJSON(req, res, () => {
             switch (req.url) {
@@ -58,24 +65,21 @@ const server = http.createServer((req, res) => { // requestListener
                     break;
             }
         });
-    } else if (req.method == 'OPTIONS') {
+    }
+    else if (req.method == 'OPTIONS') {
         res.writeHead(204, {
-            'Access-Control-Allow-Origin': 'http://localhost', // Adjust the allowed origin
-            'Access-Control-Allow-Methods': 'POST, OPTIONS',
-            'Access-Control-Allow-Headers': 'Content-Type, Accept',
-            'Access-Control-Allow-Credentials': 'true',
             'Content-Length': '0'
         });
         res.end();
-    } 
+    }
     else {
         res.writeHead(404, { 'Content-Type': 'application/json' });
         res.end(JSON.stringify({
-            error: 'Not found.'
+            error: 'Error.'
         }));
     }
 });
 
 server.listen(PORT, () => {
-    console.log(`Server is running on http://localhost:${PORT}`);
+    console.log(`Server is running on https://localhost:${PORT}`);
 });

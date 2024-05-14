@@ -1,54 +1,65 @@
-const http = require('http');
+const https = require('https');
 const fs = require('fs');
 const path = require('path');
-const PORT = 80;
+const PORT = 443;
 
-// Base directory where your static files are located
+// static files location
 const baseDirectory = path.join(__dirname, 'public');
 
-// Create an HTTP server
-const server = http.createServer((req, res) => {
-  try {
-    // Normalize the URL path and default to index.html if empty
-    let safeSuffix = path.normalize(req.url).replace(/^(\.\.[\/\\])+/, '');
+let options;
 
-    const filePath = path.join(baseDirectory, safeSuffix);
+if (process.env.DEBUG_MODE == 'true') {
+    options = {
+        key: fs.readFileSync('./microservices/key.pem', 'utf8'),
+        cert: fs.readFileSync('./microservices/csr.pem', 'utf8')
+    };
+} else {
+    options = {
+        key: fs.readFileSync('../key.pem', 'utf8'),
+        cert: fs.readFileSync('../csr.pem', 'utf8')
+    };
+}
 
-    // Determine content type by file extension
-    const contentType = {
-      '.html': 'text/html',
-      '.js': 'application/javascript',
-      '.css': 'text/css',
-      '.json': 'application/json',
-      '.png': 'image/png',
-      '.jpg': 'image/jpeg',
-      '.svg': 'image/svg+xml'
-    }[path.extname(filePath).toLowerCase()] || 'application/octet-stream';
+const server = https.createServer(options, (req, res) => {
+    try {
+        let safeSuffix = path.normalize(req.url).replace(/^(\.\.[\/\\])+/, '');
 
-    // Serve the file if it exists
-    fs.stat(filePath, (err, stats) => {
-      if (err) {
-        if (err.code === 'ENOENT') {
-          res.writeHead(404, {'Content-Type': 'text/html'});
-          res.end('<h1>404 Not Found</h1>');
-        } else {
-          res.writeHead(500);
-          res.end('Internal Server Error');
-        }
-      } else if (stats.isFile()) {
-        res.writeHead(200, {'Content-Type': contentType});
-        fs.createReadStream(filePath).pipe(res);
-      } else {
-        res.writeHead(403);
-        res.end('Forbidden');
-      }
-    });
-  } catch (error) {
-    res.writeHead(500);
-    res.end('Internal Server Error');
-  }
+        const filePath = path.join(baseDirectory, safeSuffix);
+        // Determine content type by file extension
+        const contentType = {
+            '.html': 'text/html',
+            '.js': 'application/javascript',
+            '.css': 'text/css',
+            '.json': 'application/json',
+            '.png': 'image/png',
+            '.jpg': 'image/jpeg',
+            '.svg': 'image/svg+xml'
+        }[path.extname(filePath).toLowerCase()] || 'application/octet-stream';
+
+        // if the file exists, we send it
+        fs.stat(filePath, (err, stats) => {
+            if (err) {
+                if (err.code === 'ENOENT') {
+                    res.writeHead(404, { 'Content-Type': 'text/html' });
+                    res.end('404 Not Found');
+                } else {
+                    res.writeHead(500);
+                    res.end('Internal Server Error');
+                }
+            } else if (stats.isFile()) {
+                res.writeHead(200, { 'Content-Type': contentType });
+                fs.createReadStream(filePath).pipe(res);
+            } else {
+                res.writeHead(403);
+                res.end('Forbidden');
+            }
+        });
+    } catch (error) {
+        res.writeHead(500);
+        res.end('Internal Server Error');
+    }
 });
 
 server.listen(PORT, () => {
-  console.log(`Server running at http://localhost:${PORT}/`);
+    console.log(`Server running at https://localhost:${PORT}/`);
 });
