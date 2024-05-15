@@ -1,11 +1,11 @@
-const { findUserByUsername } = require('../models/user.model');
+const { findUserByEmail } = require('../models/user.model');
 const { encrypt, hashWithKey } = require('../../utils/crypting');
 
 async function login(req, res) {
-    const { username, password } = req.body;
+    const { email, password } = req.body;
     const hashedPassword = hashWithKey(password, process.env.HASH_KEY);
 
-    const user = await findUserByUsername(username); // internal server occured try catch block
+    const user = await findUserByEmail(email); // internal server occured try catch block
 
     if (!user || user.password !== hashedPassword) {
         res.writeHead(401, {

@@ -5,7 +5,7 @@ const pool = mysql.createPool({
     host: 'localhost',
     user: 'root',
     password: '',
-    database: 'test'
+    database: 'ReFI'
 });
 
 async function getConnectionFromPool() {
@@ -16,11 +16,11 @@ async function getConnectionFromPool() {
     });
 }
 
-async function findUserByUsername(username) {
+async function findUserByEmail(email) {
     const connection = await getConnectionFromPool();
-    const query = 'SELECT * FROM test WHERE username = ?'; // this should be in a separate file
+    const query = 'SELECT * FROM users WHERE email = ?'; // this should be in a separate file
     const user = await new Promise((res, rej) => {
-        connection.query(query, [username], (err, result) => { // try catch in caz de eroare DB
+        connection.query(query, [email], (err, result) => { // try catch in caz de eroare DB
             if (err)
                 rej(err);
             else
@@ -32,16 +32,16 @@ async function findUserByUsername(username) {
 }
 
 async function registerUser(userData) {
-    const user = await findUserByUsername(userData.username); 
+    const user = await findUserByEmail(userData.email); 
     
     if (user != null) {
         return false;
     }
     
     const connection = await getConnectionFromPool();
-    const query = 'INSERT INTO test (username, password) VALUES (?, ?)';
+    const query = 'INSERT INTO users (email, password) VALUES (?, ?)';
     const isRegisterSuccessful = await new Promise((res) => {
-        connection.query(query, [userData.username, userData.password], (err, results) => {
+        connection.query(query, [userData.email, userData.password], (err, results) => {
         if (err)
             res(false);
         else
@@ -52,4 +52,4 @@ async function registerUser(userData) {
     return isRegisterSuccessful;
 }
 
-module.exports = { findUserByUsername, registerUser };
+module.exports = { findUserByEmail, registerUser };

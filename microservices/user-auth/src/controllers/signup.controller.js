@@ -2,10 +2,10 @@ const { registerUser } = require('../models/user.model');
 const { hashWithKey } = require('../../utils/crypting');
 
 async function signup(req, res) {
-    const { username, password } = req.body;
+    const { email, password } = req.body;
 
     // other validation logic, to be discussed
-    if (!(username && password)) {
+    if (!(email && password)) {
         res.writeHead(400, { 'Content-Type': 'application/json' });
         return res.end(JSON.stringify({
             error: 'Bad Request: Missing fields.'
@@ -14,7 +14,7 @@ async function signup(req, res) {
 
     const hashedPassword = hashWithKey(password, process.env.HASH_KEY);
     const userData = {
-        username: username,
+        email: email,
         password: hashedPassword,
     };
 

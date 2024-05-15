@@ -1,5 +1,5 @@
 document.getElementById("submit-button").addEventListener('click', async () => {
-    const username = document.getElementById("email").value;
+    const email = document.getElementById("email").value;
     const password = document.getElementById("pass").value;
 
     const response = await fetch("https://localhost:3000/login", {
@@ -11,7 +11,7 @@ document.getElementById("submit-button").addEventListener('click', async () => {
             "Content-Type": "application/json",
         },
         body: JSON.stringify({
-            username,
+            email,
             password
         }),
     });

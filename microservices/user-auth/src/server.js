@@ -52,7 +52,7 @@ const server = https.createServer(options, (req, res) => { // requestListener
                     signup(req, res);
                     break;
                 case '/logout':
-                    logout(res);
+                    logout(req, res);
                     break;
                 case '/validate':
                     validate(req, res);
