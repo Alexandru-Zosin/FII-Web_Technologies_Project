@@ -1,6 +1,24 @@
 const { retrieveEnvValue } = require('./envValueRetrieval.controller.js');
+const { avjValidateJSONStructure } = require('./ajvvalidator.controller.js');
 const fetch = require('node-fetch');
 const url = require('url');
+const mysql = require('mysql');
+
+const pool = mysql.createPool({
+    connectionLimit: 10,
+    host: 'localhost',
+    user: 'root',
+    password: '',
+    database: 'ReFI'
+});
+
+async function getConnectionFromPool() {
+    return await new Promise((res) => {
+        pool.getConnection((err, conn) => {
+            res(conn);
+        });
+    });
+}
 // strategy make 3 requests at maximum and then we stop any requests (basically try 3 times to get a valid message from the ai)
 
 const applyCorsHeadersOnRequest = async (req, res) => {
@@ -26,7 +44,10 @@ const validateHeadersForCors = async (req, res) => {
     }
 }
 
+const MAXMIMUM_NUMBER_OF_TRIES = 3;
+
 const createFiltersFromPrompt = async (req, res) => {
+  for (let tryNumber = 1; tryNumber <= MAXMIMUM_NUMBER_OF_TRIES; ++tryNumber) {
     validateHeadersForCors(req, res); // in order to add the headers to the response for the cors
     const parsedUrl = url.parse(req.url, true);  // `true` parses the query string into an object
     const query = parsedUrl.query;  // This contains the parsed query string as an object
@@ -40,18 +61,72 @@ const createFiltersFromPrompt = async (req, res) => {
       body: JSON.stringify(openAiAskAction.payload)
     })
 
-    const responseJsonPayload = await response.json();
+    const responsejson = await response.json();
+    const responseJsonPayload = JSON.parse(responsejson.choices[0].message.content);
     console.log(responseJsonPayload)
     // if we manage to valide it the received json then we are on the track to respond with it
-    const isJSONValid = true; // later the validation here
+    const isJSONValid = avjValidateJSONStructure(responseJsonPayload); // later the validation here
+
+    const sqlResponse = await fetchResultsFromSql(responseJsonPayload);
+
     if (isJSONValid) {
-        res.writeHead(200, {'Content-Type': 'application/json', });
-        res.end(responseJsonPayload?.choices[0]?.message?.content); 
-    } else {
-        res.writeHead(405);
-        res.end(JSON.stringify({message: "AI generation has failed multiple times, aborting"}));
+      res.writeHead(200, {'Content-Type': 'application/json', });
+      res.end(JSON.stringify(sqlResponse)); 
+      return;
     }
+  }
+  res.end(JSON.stringify({message: "AI generation has failed multiple times, aborting"}));
+  res.writeHead(405);
 };
+
+const fetchResultsFromSql = async (jsonObject) => {
+  const connection = await getConnectionFromPool();
+
+  const sql = `
+  SELECT lang.id
+  FROM languages lang
+  JOIN license lic ON lang.id = lic.id
+  JOIN liveCoding live ON lang.id = live.id
+  JOIN platforms plat ON lang.id = plat.id
+  JOIN realTimeCollaboration realtime ON lang.id = realtime.id
+  JOIN purpose purp on purp.id = lang.id
+  JOIN type t ON lang.id = t.id
+  WHERE plat.Platforms IN (${jsonObject.Platform.map(value => `'${value}'`).join(', ')})
+  AND lang.Language IN (${jsonObject.Language.map(value => `'${value}'`).join(', ')})
+  AND t.Type IN (${jsonObject.Type.map(value => `'${value}'`).join(', ')})
+  AND purp.Purpose IN (${jsonObject.Purpose.map(value => `'${value}'`).join(', ')})
+  AND lic.License IN (${jsonObject.License.map(value => `'${value}'`).join(', ')})
+  LIMIT 3;
+  `
+  // for now expluded for the query since hard to determine by the ai (should introduce the options of multiple so we can deduce if the usre does not care about theese)
+  // AND realtime.realtimeCollaboration = ${jsonObject['Realtime Collaboration'] ? "1" : "0"}
+  // AND live.interactivity = ${jsonObject['Live Coding'] ? "1" : "0"};
+
+  // error handling
+  const idsResult = await new Promise((res) => connection.query(sql, (err, result) => {
+    res(result);
+  }));
+  const ids = idsResult.map(row => row.id);
+
+  if (ids.length > 0) {
+    const technologiesQuery = `
+      SELECT *
+      FROM technologies
+      WHERE id IN (${ids.map(id => `'${id}'`).join(', ')});
+    `;
+
+    // Execute the second query to get the information from the technologies table
+    const technologiesResult = await new Promise(res => connection.query(technologiesQuery, (err, result) => {
+      res(result)
+    }));
+
+    // Now you have the technologiesResult which contains all the information for the given IDs
+    console.log(technologiesResult);
+    return technologiesResult;
+  } else {
+    console.log("No matching IDs found.");
+  }
+}
 
 const constructAskFromPrompt = (userPrompt, api_key) => {
     headers = {
@@ -69,10 +144,9 @@ const constructAskFromPrompt = (userPrompt, api_key) => {
           },
           {
             "role": "system",
-            "content": `Respond with a JSON object that validates the following schema: 
+            "content": `Respond with a JSON object that validates the following schema (but dont add the semantic definitions or other stuff, just the pure JSON object): 
             {
-              "version": "1.0",
-              "attributes": {
+              "properties": {
                 "Platform": {
                   "type": "Array of Strings",
                   "description": "Supported operating systems or environments.",
@@ -93,11 +167,6 @@ const constructAskFromPrompt = (userPrompt, api_key) => {
                   "description": "Primary use case or domain of application.",
                   "values": ["Game Development", "Visual Arts", "Data Visualization", "Audio Production", "Video Mapping", "Generative Design", "3D Modeling", "Live Graphics", "Particle Effects", "Projection Mapping"]
                 },
-                "Rendering": {
-                  "type": "Array of Strings",
-                  "description": "Types of rendering technology supported.",
-                  "values": ["WebGL", "Metal", "Canvas", "SVG", "Vulkan", "DirectX", "OpenGL", "WebGL2"]
-                },
                 "License": {
                   "type": "Array of Strings",
                   "description": "Type of licensing model.",
@@ -106,10 +175,6 @@ const constructAskFromPrompt = (userPrompt, api_key) => {
                 "Realtime Collaboration": {
                   "type": "Boolean",
                   "description": "Indicates if the tool supports real-time collaborative features."
-                },
-                "Interactivity": {
-                  "type": "Boolean",
-                  "description": "Specifies if the tool is geared towards or supports interactive media creation."
                 },
                 "Live Coding": {
                   "type": "Boolean",

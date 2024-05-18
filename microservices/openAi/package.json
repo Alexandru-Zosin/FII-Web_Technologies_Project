@@ -1,14 +1,15 @@
 {
   "dependencies": {
+    "ajv": "^8.13.0",
     "dotenv": "^16.4.5",
     "https": "^1.0.0",
+    "mysql": "^2.18.1",
     "node-fetch": "^2.7.0"
   },
   "name": "openai",
   "version": "1.0.0",
   "description": "a microservice for handling open ai requests from user for filtering database results",
   "main": "interactions.model.js",
-  "devDependencies": {},
   "scripts": {
     "test": "echo \"Error: no test specified\" && exit 1"
   },

@@ -11,7 +11,6 @@ const databases = [
   { databaseName: "platforms", databaseConfigName: "platformsDatabase.json" },
   { databaseName: "purpose", databaseConfigName: "purposeDatabase.json" },
   { databaseName: "realtimeCollaboration", databaseConfigName: "realtimeCollaborationDatabase.json" },
-  { databaseName: "rendering", databaseConfigName: "renderingDatabase.json" },
   { databaseName: "type", databaseConfigName: "typeDatabase.json" }
 ];
 
@@ -57,7 +56,7 @@ con.connect(function (err) {
           console.log("Connected to ReFI!");
 
           let createUserTableSql = `CREATE TABLE IF NOT EXISTS users (
-            id INT PRIMARY KEY,
+            id INT PRIMARY KEY AUTO_INCREMENT,
             email VARCHAR(255) NOT NULL,
             password TEXT NOT NULL,
             darktheme BOOLEAN,

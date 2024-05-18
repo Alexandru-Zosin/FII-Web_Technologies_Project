@@ -12,7 +12,7 @@
             "skipFiles": [
                 "<node_internals>/**"
             ],
-            "program": "${workspaceFolder}\\microservices\\user-auth\\src\\server.js",
+            "program": "${workspaceFolder}/microservices/user-auth/src/server.js",
             "env": {
                 "NODE_ENV": "development",
                 "DEBUG_MODE": "true"
@@ -25,7 +25,7 @@
             "skipFiles": [
                 "<node_internals>/**"
             ],
-            "program": "${workspaceFolder}\\microservices\\front\\server.js",
+            "program": "${workspaceFolder}/microservices/front/server.js",
             "env": {
                 "NODE_ENV": "development",
                 "DEBUG_MODE": "true"
@@ -38,7 +38,7 @@
             "skipFiles": [
                 "<node_internals>/**"
             ],
-            "program": "${workspaceFolder}\\microservices\\openAi\\interactions.model.js",
+            "program": "${workspaceFolder}/microservices/openAi/interactions.model.js",
             "env": {
                 "NODE_ENV": "development",
                 "DEBUG_MODE": "true"
