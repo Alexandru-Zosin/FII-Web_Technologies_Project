@@ -1,0 +1,38 @@
+[
+    {
+        "databaseName": "technologies",
+        "databaseConfigName": "technologies.json"
+    },
+    {
+        "databaseName": "languages",
+        "databaseConfigName": "languagesDatabase.json"
+    },
+    {
+        "databaseName": "license",
+        "databaseConfigName": "licenseDatabase.json"
+    }
+    {
+        "databaseName": "liveCoding",
+        "databaseConfigName": "liveCodingDatabase.json"
+    }
+    {
+        "databaseName": "platforms",
+        "databaseConfigName": "platformsDatabase.json"
+    }
+    {
+        "databaseName": "purpose",
+        "databaseConfigName": "purposeDatabase.json"
+    }
+    {
+        "databaseName": "realtimeCollaboration",
+        "databaseConfigName": "realtimeCollaborationsDatabase.json"
+    }
+    {
+        "databaseName": "redering",
+        "databaseConfigName": "rederingDatabase.json"
+    }
+    {
+        "databaseName": "type",
+        "databaseConfigName": "typeDatabase.json"
+    }
+]
