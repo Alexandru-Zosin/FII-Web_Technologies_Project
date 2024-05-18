@@ -35,10 +35,6 @@
       "type": "Boolean",
       "description": "Indicates if the tool supports real-time collaborative features."
     },
-    "Interactivity": {
-      "type": "Boolean",
-      "description": "Specifies if the tool is geared towards or supports interactive media creation."
-    },
     "Live Coding": {
       "type": "Boolean",
       "description": "Indicates if the tool supports live coding, essential for live performances and real-time iterative design."
