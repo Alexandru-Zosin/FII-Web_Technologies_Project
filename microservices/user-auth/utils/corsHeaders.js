@@ -1,6 +1,6 @@
 const PORTS = require('../whitelistports');
 
-const allowedOrigins = Object.values(PORTS).map(port => `https://localhost:${port}`);
+const allowedOrigins = Object.values(PORTS.PORTS).map(port => `https://localhost:${port}`);
 allowedOrigins.push('https://localhost');
 
 function setCORSHeadersOnValidOrigin(req, res) {

@@ -43,24 +43,23 @@
         <div class="container">
             <div id='changeData' class="data-section">
                 <form class="data-form">
-                    <div class="form-group">
+                    <span> What would you like to change? </span> 
+                    <select id="option" name="option">
+                        <option value="email">Email</option>
+                        <option value="password">Password</option>
+                        <option value="apiKey">OpenAI API Key</option>
+                    </select>
+                    <br>
+                    <div class="form-group" id = 'changeableForm'>
                         <label for="email">New Email</label><br>
                         <input type="text" id="email" name="email" placeholder="email@example.com"><br>
-                    </div>
-                    <div class="form-group">
-                        <label for="pass">New password</label><br>
-                        <input type="password" id="pass" name="pass"><br>
-                    </div>
-                    <div class="form-group">
-                        <label for="openAiKey">OpenAI token</label><br>
-                        <input type="text" id="openAiKey" name="openAiKey"><br>
                     </div>
                     <div class="form-group">
                         <label for='confirmCurrentPassword'>Confirm Current Password</label><br>
                         <input type="password" id="confirmCurrentPassword" name='confirmCurrentPassword'><br>
                     </div>
                     <div class="form-group">
-                        <input type="submit" value="Submit">
+                        <input type="submit" id ='submit' value="Submit">
                     </div>
                 </form>
             </div>
@@ -84,6 +83,18 @@
             <li id='copyright'> © 2024 Vlad Butnaru, Zosin Alexandru </li>
         </ul>
     </footer>
+    <!-- This is the div that we need to display the modal for the deletion confirmation ask -->
+    <div id="deleteAccountModal" class="modal">
+        <div class="modal-content">
+            <h4>Confirm Account Deletion</h4>
+            <p>Please enter your password to confirm the deletion of your account.</p>
+            <input type="password" id="confirmPassword" placeholder="Password">
+            <div class="modal-footer">
+                <button id="confirmDelete" class="btn">Delete Account</button>
+                <button id="cancelDelete" class="btn">Cancel</button>
+            </div>
+        </div>
+    </div>
 </body>
 
 </html>

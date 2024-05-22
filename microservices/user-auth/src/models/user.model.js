@@ -31,6 +31,21 @@ async function findUserByEmail(email) {
     return user;
 }
 
+async function getHashedPasswordForUserId(userId) {
+    const connection = await getConnectionFromPool();
+    const query = `SELECT password FROM users where id = ${userId}`
+    const password = await new Promise((res, rej) => {
+        connection.query(query, (err, result) => {
+            if (err)
+                rej(err);
+            else 
+                res(result[0]);
+        })
+    })
+    connection.release();
+    return password;
+}
+
 async function registerUser(userData) {
     const user = await findUserByEmail(userData.email); 
     
@@ -52,4 +67,4 @@ async function registerUser(userData) {
     return isRegisterSuccessful;
 }
 
-module.exports = { findUserByEmail, registerUser };
+module.exports = { findUserByEmail, registerUser, getHashedPasswordForUserId };

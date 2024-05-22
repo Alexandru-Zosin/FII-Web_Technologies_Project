@@ -1,7 +1,10 @@
 const { decrypt } = require('../../utils/crypting');
 const { PORTS } = require('../../whitelistports');
+const { getHashedPasswordForUserId } = require('../models/user.model');
+const url = require('url');
 
-function validate(req, res) {
+
+async function validate(req, res) {
     const cookies = {};
     if (req.headers.cookie) {
         const cookieArray = req.headers.cookie.split(';');
@@ -31,9 +34,24 @@ function validate(req, res) {
         }
 
         res.writeHead(200, { 'Content-Type': 'application/json' });
-        switch (req.connection.remotePort) {
+        // switchong remote port for the port from the origin since that is stable 
+        const origin = req.headers.origin;
+        let remotePort;
+      
+        if (origin) {
+          const parsedUrl = new url.URL(origin);
+          remotePort = parsedUrl.port || '443';
+        } else {
+          remotePort = req.socket.remotePort;
+        }
+      
+        switch (parseInt(remotePort)) {
             case PORTS.admin:
                 res.end(JSON.stringify({ userId, role }));
+                break;
+            case PORTS.userProfileHandler: 
+                const hashedPassword = await getHashedPasswordForUserId(userId);
+                res.end(JSON.stringify({ hashedPassword: hashedPassword.password, userId }));
                 break;
             case PORTS.front:
                 res.end(JSON.stringify({ userId, role }));

@@ -1,7 +1,8 @@
 const PORTS = {
-    "openAI": 50105,
+    "openAI": 3555,
     "admin": 3001,
     "front": 443,
+    "userProfileHandler": 8090
 };
 
 module.exports = { PORTS };
