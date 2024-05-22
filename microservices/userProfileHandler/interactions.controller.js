@@ -67,7 +67,7 @@ const updatePassword = async (req, res) => {
     host: "localhost",
     user: "root",
     password: "",
-    database: "ReFi"
+    database: "ReFiUSERS"
   });
 
   if (validatedPassword == hashedPassword)
