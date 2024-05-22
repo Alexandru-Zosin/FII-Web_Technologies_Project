@@ -8,6 +8,19 @@ const routes = {
         'PATCH': controller.updatePassword,
         'OPTIONS': controller.applyCorsHeadersOnRequest,
     },
+    'account/email': {
+        'PATCH': controller.updateEmail,
+        'OPTIONS': controller.applyCorsHeadersOnRequest,
+    },
+    'account/apikey': {
+        'PATCH': controller.updateApiKey,
+        'OPTIONS': controller.applyCorsHeadersOnRequest,
+    },
+    'account': {
+        'DELETE': controller.deleteAccount,
+        'OPTIONS': controller.applyCorsHeadersOnRequest
+    }
+    
 }
 require('dotenv').config({ path: path.join(__dirname, '.env') });
 

@@ -24,7 +24,7 @@ const validateHeadersForCors = async (req, res) => {
     if ('https://localhost' == requestOrigin) {
       console.log('setting here the headers');
         res.setHeader('Access-Control-Allow-Origin', requestOrigin);
-        res.setHeader('Access-Control-Allow-Methods', 'PATCH, OPTIONS');
+        res.setHeader('Access-Control-Allow-Methods', 'PATCH, OPTIONS, DELETE');
         res.setHeader('Access-Control-Allow-Headers', 'Content-Type, Accept');
         res.setHeader('Access-Control-Allow-Credentials', 'true');
         return true;
@@ -94,9 +94,9 @@ const updatePassword = async (req, res) => {
     }
     catch(e) {
       res.writeHead(200, { 'Content-Type': 'application/json' });
-      res.end(JSON.stringify({ passwordChanged: true }));
-      console.log('the password is valid')
+      res.end(JSON.stringify({ passwordChanged: false }));
     }
+    console.log('the password is valid')
   }
   else 
   {
@@ -106,9 +106,221 @@ const updatePassword = async (req, res) => {
   }
 }
 
+const updateEmail = async (req, res) => {
+  // validate that the password is the same as the one in the cookie
+  validateHeadersForCors(req, res);
+  console.log(req.body);
+  const validation = await fetch("https://localhost:3000/validate", { // this is the password hashed from the database
+    agent,
+    method: "POST",
+    credentials: 'include',
+    mode: "cors",
+    headers: {
+      "Accept": "application/json",
+      "Content-Type": "application/json",
+      "Origin": "https://localhost:8090",
+      "Cookie": req.headers.cookie
+    },
+    body: JSON.stringify({})
+  });
+  const validationJsonPayload = await validation.json();
+  const validatedPassword = validationJsonPayload.hashedPassword;
+  const userId = validationJsonPayload.userId;
+  console.log(validatedPassword);
+
+  const requestJsonPayload = req.body;
+  console.log(requestJsonPayload, 'json response');
+  const confirmPassword = requestJsonPayload.confirmPassword;
+  const hashedPassword = hashWithKey(confirmPassword, process.env.HASH_KEY); // the hashed passwrod that the user confirmed with
+
+  const con = mysql.createConnection({
+    host: "localhost",
+    user: "root",
+    password: "",
+    database: "ReFiUSERS"
+  });
+
+  if (validatedPassword == hashedPassword)
+  {
+    const newEmail = requestJsonPayload.newEmail;
+    try {
+        await new Promise((res, rej) => {
+        con.query(`UPDATE users SET email = '${newEmail}' WHERE id = ${userId}`, (err, response) => {
+          if (err)
+            rej(err);
+          else 
+            res(response);
+        })
+      })
+      res.writeHead(200, { 'Content-Type': 'application/json',
+        'Set-Cookie': [
+          `default=deleted; HttpOnly; Path=/; SameSite=None; Secure; expires=Thu, 01 Jan 1970 00:00:00 GMT;`,
+          `dark_theme=deleted; Path=/; SameSite=None; Secure; expires=Thu, 01 Jan 1970 00:00:00 GMT;`
+        ],
+       });
+      res.end(JSON.stringify({ emailChanged: true }));
+    }
+    catch(e) {
+      res.writeHead(200, { 'Content-Type': 'application/json' });
+      res.end(JSON.stringify({ emailChanged: false }));
+      console.log('the password is valid')
+    }
+  }
+  else 
+  {
+    res.writeHead(206, { 'Content-Type': 'application/json' });
+    res.end(JSON.stringify({ emailChanged: false, reason: "The password for confirmation is not matching the one of the account" }));
+    console.log('is password is invalid');
+  }
+}
+
+const updateApiKey = async (req, res) => {
+  // validate that the password is the same as the one in the cookie
+  validateHeadersForCors(req, res);
+  console.log(req.body);
+  const validation = await fetch("https://localhost:3000/validate", { // this is the password hashed from the database
+    agent,
+    method: "POST",
+    credentials: 'include',
+    mode: "cors",
+    headers: {
+      "Accept": "application/json",
+      "Content-Type": "application/json",
+      "Origin": "https://localhost:8090",
+      "Cookie": req.headers.cookie
+    },
+    body: JSON.stringify({})
+  });
+  const validationJsonPayload = await validation.json();
+  const validatedPassword = validationJsonPayload.hashedPassword;
+  const userId = validationJsonPayload.userId;
+  console.log(validatedPassword);
+
+  const requestJsonPayload = req.body;
+  console.log(requestJsonPayload, 'json response');
+  const confirmPassword = requestJsonPayload.confirmPassword;
+  const hashedPassword = hashWithKey(confirmPassword, process.env.HASH_KEY); // the hashed passwrod that the user confirmed with
+
+  const con = mysql.createConnection({
+    host: "localhost",
+    user: "root",
+    password: "",
+    database: "ReFiUSERS"
+  });
+
+  if (validatedPassword == hashedPassword)
+  {
+    //
+    const newKey = requestJsonPayload.newKey;
+    try {
+        await new Promise((res, rej) => {
+        con.query(`UPDATE users SET openaikey = '${newKey}' WHERE id = ${userId}`, (err, response) => {
+          if (err)
+            rej(err);
+          else 
+            res(response);
+        })
+      })
+      res.writeHead(200, { 'Content-Type': 'application/json',           
+          'Set-Cookie': [
+          `default=deleted; HttpOnly; Path=/; SameSite=None; Secure; expires=Thu, 01 Jan 1970 00:00:00 GMT;`,
+          `dark_theme=deleted; Path=/; SameSite=None; Secure; expires=Thu, 01 Jan 1970 00:00:00 GMT;`
+        ]
+      });
+      res.end(JSON.stringify({ keyChanged: true }));
+    }
+    catch(e) {
+      res.writeHead(200, { 'Content-Type': 'application/json' });
+      res.end(JSON.stringify({ keyChanged: false }));
+      console.log('the password is valid')
+    }
+  }
+  else 
+  {
+    res.writeHead(206, { 'Content-Type': 'application/json' });
+    res.end(JSON.stringify({ keyChanged: false, reason: "The password for confirmation is not matching the one of the account" }));
+    console.log('is password is invalid');
+  }
+}
+
+
+const deleteAccount = async (req, res) => {
+  // validate that the password is the same as the one in the cookie
+  validateHeadersForCors(req, res);
+  console.log(req.body);
+  const validation = await fetch("https://localhost:3000/validate", { // this is the password hashed from the database
+    agent,
+    method: "POST",
+    credentials: 'include',
+    mode: "cors",
+    headers: {
+      "Accept": "application/json",
+      "Content-Type": "application/json",
+      "Origin": "https://localhost:8090",
+      "Cookie": req.headers.cookie
+    },
+    body: JSON.stringify({})
+  });
+  const validationJsonPayload = await validation.json();
+  const validatedPassword = validationJsonPayload.hashedPassword;
+  const userId = validationJsonPayload.userId;
+  console.log(validatedPassword);
+
+  const requestJsonPayload = req.body;
+  console.log(requestJsonPayload, 'json response');
+  const confirmPassword = requestJsonPayload.confirmPassword;
+  const hashedPassword = hashWithKey(confirmPassword, process.env.HASH_KEY); // the hashed passwrod that the user confirmed with
+
+  const con = mysql.createConnection({
+    host: "localhost",
+    user: "root",
+    password: "",
+    database: "ReFiUSERS"
+  });
+
+  if (validatedPassword == hashedPassword)
+  {
+    //
+    try {
+        await new Promise((res, rej) => {
+        con.query(`DELETE FROM users WHERE id = ${userId}`, (err, response) => {
+          if (err)
+            rej(err);
+          else 
+            res(response);
+        })
+      })
+      res.writeHead(200, 
+        {
+          'Content-Type': 'application/json',
+          'Set-Cookie': [
+            `default=deleted; HttpOnly; Path=/; SameSite=None; Secure; expires=Thu, 01 Jan 1970 00:00:00 GMT;`,
+            `dark_theme=deleted; Path=/; SameSite=None; Secure; expires=Thu, 01 Jan 1970 00:00:00 GMT;`
+          ]
+      })
+      res.end(JSON.stringify({ keyChanged: true }));
+    }
+    catch(e) {
+      // send an error message
+      res.writeHead(200, { 'Content-Type': 'application/json' });
+      res.end(JSON.stringify({ keyChanged: false }));
+      console.log('the password is valid')
+    }
+  }
+  else 
+  {
+    res.writeHead(206, { 'Content-Type': 'application/json' });
+    res.end(JSON.stringify({ keyChanged: false, reason: "The password for confirmation is not matching the one of the account" }));
+    console.log('is password is invalid');
+  }
+}
+
 
 module.exports = {
   updatePassword,
+  updateEmail,
+  updateApiKey,
+  deleteAccount,
   validateHeadersForCors,
   applyCorsHeadersOnRequest
 }

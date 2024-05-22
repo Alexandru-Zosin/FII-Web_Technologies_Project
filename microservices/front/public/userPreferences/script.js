@@ -58,12 +58,15 @@ document.getElementById('submit').addEventListener('click', async (e) => {
         if (response.status == 206)
             window.alert('Wrong Password')
         else if (response.status == 200)
+        {
+            window.alert('The data was changed successfully.');
             window.location.href = '/login/index.html'
+        }
         console.log(resposne.status, responseJsonPayload)
     }
     else if (option == 'email') {
         const newEmail = document.getElementById('email').value;
-        const response = await fetch("https://localhost:3000/account/email", {
+        const response = await fetch("https://localhost:8090/account/email", {
             method: "PATCH",
             credentials: 'include', // https://reqbin.com/code/javascript/lcpj87js/javascript-fetch-with-credentials
             mode: "cors",
@@ -77,11 +80,18 @@ document.getElementById('submit').addEventListener('click', async (e) => {
             }),
         });
         const responseJsonPayload = await response.json();
-        console.log(resposne.status, responseJsonPayload)
+        console.log(response.status, responseJsonPayload)
+        if (response.status == 206)
+            window.alert('Wrong Password')
+        else if (response.status == 200)
+        {
+            window.alert('The data was changed successfully.');
+            window.location.href = '/login/index.html'
+        }
     }
     else if (option == 'apiKey') {
         const newKey = document.getElementById('openAiKey').value;
-        const response = await fetch("https://localhost:3000/account/apiKey", {
+        const response = await fetch("https://localhost:8090/account/apikey", {
             method: "PATCH",
             credentials: 'include', // https://reqbin.com/code/javascript/lcpj87js/javascript-fetch-with-credentials
             mode: "cors",
@@ -95,7 +105,14 @@ document.getElementById('submit').addEventListener('click', async (e) => {
             }),
         });
         const responseJsonPayload = await response.json();
-        console.log(resposne.status, responseJsonPayload)
+        if (response.status == 206)
+            window.alert('Wrong Password')
+        else if (response.status == 200)
+        {
+            window.alert('The data was changed successfully.');
+            window.location.href = '/login/index.html'
+        }
+        console.log(response.status, responseJsonPayload)
     }
 })
 
@@ -117,11 +134,28 @@ document.getElementById('confirmDelete').addEventListener('click', async () => {
         // Here, you would typically send the password to your server for validation and to initiate the deletion
         console.log('User confirmed deletion with password:', password);
 
-        // Hide the modal
-        document.getElementById('deleteAccountModal').style.display = 'none';
-
+        const response = await fetch("https://localhost:8090/account", {
+            method: "DELETE",
+            credentials: 'include', // https://reqbin.com/code/javascript/lcpj87js/javascript-fetch-with-credentials
+            mode: "cors",
+            headers: {
+                "Accept": "application/json",
+                "Content-Type": "application/json",
+            },
+            body: JSON.stringify({
+                confirmPassword: password
+            }),
+        });
+        const responseJsonPayload = await response.json();
+        if (response.status == 206)
+            window.alert('Wrong Password')
+        else if (response.status == 200)
+        {
+            window.alert('Account deletion, we are sorry you have to leave us :(.');
+            window.location.href = '/login/index.html'
+        }
+        console.log(response.status, responseJsonPayload)
         // Perform the deletion (you can replace this part with your actual deletion logic)
-        alert('Account deletion initiated.');
     } else {
         alert('Please enter your password.');
     }

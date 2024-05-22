@@ -13,7 +13,7 @@ document.getElementById('submitButton').addEventListener('click', async () => {
     });
     const responseJsonPayload = await response.json();
     let htmlString
-    if (response.status != 200)
+    if (response.status != 200 && response.status != 201)
     {
         htmlString = `<p>
         <span>
@@ -36,8 +36,10 @@ document.getElementById('submitButton').addEventListener('click', async () => {
                     aliquip ex ea commodo consequat.
             </p>`
         ).join(" ");    
-    document.getElementById('answer').innerHTML = htmlString;
-    loader.style.display = 'none';
+        document.getElementById('answer').innerHTML = htmlString;
+        loader.style.display = 'none';
+        if (response.status == 201)
+            window.alert("The key was not valid, fallback to gpt 3.5");
 })
 
 window.onload = () => {

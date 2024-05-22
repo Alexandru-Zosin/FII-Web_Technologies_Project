@@ -65,6 +65,19 @@
                 "NODE_ENV": "development",
                 "DEBUG_MODE": "true"
             }
+        },
+        {
+            "type": "node",
+            "request": "launch",
+            "name": "Launch databaseTechnologiesFilter Server",
+            "skipFiles": [
+                "<node_internals>/**"
+            ],
+            "program": "${workspaceFolder}/microservices/technologiesFilter/interactions.model.js",
+            "env": {
+                "NODE_ENV": "development",
+                "DEBUG_MODE": "true"
+            }
         }
     ],
     "compounds": [
@@ -75,7 +88,8 @@
                 "Launch Frontend Server",
                 "Launch OPENAI Server",
                 "Launch PROXY Server",
-                "Launch userProfileHandler Server"
+                "Launch userProfileHandler Server",
+                "Launch databaseTechnologiesFilter Server"
             ]
         }
     ]

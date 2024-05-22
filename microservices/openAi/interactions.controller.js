@@ -4,6 +4,10 @@ const fetch = require('node-fetch');
 const url = require('url');
 const mysql = require('mysql');
 
+const agent = new (require('https')).Agent({
+  rejectUnauthorized: false
+});
+
 const pool = mysql.createPool({
     connectionLimit: 10,
     host: 'localhost',
@@ -48,11 +52,30 @@ const MAXMIMUM_NUMBER_OF_TRIES = 3;
 
 const createFiltersFromPrompt = async (req, res) => {
   validateHeadersForCors(req, res); // in order to add the headers to the response for the cors
+
+  const validation = await fetch("https://localhost:3000/validate", { // this is how we get acces to the api key
+    agent,
+    method: "POST",
+    credentials: 'include',
+    mode: "cors",
+    headers: {
+      "Accept": "application/json",
+      "Content-Type": "application/json",
+      "Origin": "https://localhost:3555",
+      "Cookie": req.headers.cookie
+    },
+    body: JSON.stringify({})
+  });
+
+  const validationJsonPayload = await validation.json()
+
   const parsedUrl = url.parse(req.url, true);  // `true` parses the query string into an object
   const query = parsedUrl.query;  // This contains the parsed query string as an object
   const prompt = query.prompt; 
-  const openAiKey = retrieveEnvValue('OPEN_AI_KEY');
-  const openAiAskAction = constructAskFromPrompt(prompt, openAiKey);
+  let gptVersion = validationJsonPayload.openAiKey != undefined ? 4 : 3.5;
+  let openAiKey = gptVersion == 4 ? validationJsonPayload.openAiKey : retrieveEnvValue('OPEN_AI_KEY');
+  let keyWasInvalid = false;
+  let openAiAskAction = constructAskFromPrompt(prompt, openAiKey, gptVersion);
 
   for (let tryNumber = 1; tryNumber <= MAXMIMUM_NUMBER_OF_TRIES; ++tryNumber) {
     try {
@@ -64,6 +87,11 @@ const createFiltersFromPrompt = async (req, res) => {
       })
 
       const responsejson = await response.json();
+      if (responsejson?.error?.code == 'invalid_api_key')
+      {
+        throw new Error('InvalidApiKey');
+        continue;
+      }
       const responseJsonPayload = JSON.parse(responsejson.choices[0].message.content);
       console.log(responseJsonPayload)
       // if we manage to valide it the received json then we are on the track to respond with it
@@ -71,24 +99,37 @@ const createFiltersFromPrompt = async (req, res) => {
 
       if (isJSONValid) {
         console.log('found a valid json');
-        res.writeHead(200, {'Content-Type': 'application/json'});
+        if (keyWasInvalid == true)
+          res.writeHead(201, {'Content-Type': 'application/json'});
+        else
+          res.writeHead(200, {'Content-Type': 'application/json'});
         res.end(JSON.stringify(responseJsonPayload)); 
         return;
       } // else we should just continue since the incrementation is done automatically
-    } catch (error) {console.error("Error in open ai microservice while fetching the response -> ", error)}
+    } catch (error) {
+      console.error("Error in open ai microservice while fetching the response -> ", error);
+      if (error.message == 'InvalidApiKey')
+      {
+        tryNumber = 0;
+        gptVersion = 3.5;
+        openAiKey = retrieveEnvValue('OPEN_AI_KEY');
+        keyWasInvalid = true
+        openAiAskAction = constructAskFromPrompt(prompt, openAiKey, gptVersion);
+      }
+    }
   }
   res.writeHead(405);
   res.end(JSON.stringify({message: "AI generation has failed multiple times, aborting"}));
 };
 
-const constructAskFromPrompt = (userPrompt, api_key) => {
+const constructAskFromPrompt = (userPrompt, api_key, gptVersion) => {
     headers = {
         "Content-Type": "application/json",
         "Authorization": `Bearer ${api_key}`
     }
     
     payload = {
-        "model": "gpt-3.5-turbo-1106",
+        "model": gptVersion == 4 ? 'gpt-4-1106-preview' : 'gpt-3.5-turbo-1106',
         "response_format": {"type": "json_object"},
         "messages": [
           {

@@ -47,9 +47,11 @@ const handleQuery = async (req, res) => {
     headers: {
       "Accept": "application/json",
       "Content-Type": "application/json",
-      "Origin": "https://localhost:3556"
+      "Origin": "https://localhost:3556",
+      "Cookie": req.headers.cookie
     },
   });
+  let wasKeyInvalid = filtersResponseFromOpenAi.status == 201;
   // if err dont continue
   const jsonFilters = await filtersResponseFromOpenAi.json();
   const technologiesToServerBack = await fetch("https://localhost:3557/extractTechnologies?jsonFilters=" + encodeURIComponent(JSON.stringify(jsonFilters)),
@@ -67,11 +69,14 @@ const handleQuery = async (req, res) => {
   if (technologiesToServerBack.status != 200)
   {
     res.writeHead(406);
-    res.end(JSON.stringify("Error: No technologies that fit the reuqests found")); 
+    res.end(JSON.stringify("Error: No technologies that fit the reuqests found"));
+    return; 
   }
   const technologies = await technologiesToServerBack.json();
-
-  res.writeHead(200);
+  if (wasKeyInvalid)
+    res.writeHead(201, {'Content-Type': 'application/json'});
+  else
+    res.writeHead(200, {'Content-Type': 'application/json'});
   const response = [];
   for (let tech of technologies)
     response.push(tech);

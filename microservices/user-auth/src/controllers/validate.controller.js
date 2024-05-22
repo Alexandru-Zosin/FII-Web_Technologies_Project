@@ -57,10 +57,10 @@ async function validate(req, res) {
                 res.end(JSON.stringify({ userId, role }));
                 break;
             case PORTS.openAI:
-                res.end(JSON.stringify({ openAiKey }));
+                res.end(JSON.stringify({ openAiKey: openAiKey.replaceAll(/\s/g,'') }));
                 break;
             default:
-                res.end(JSON.stringify({ openAiKey }));
+                res.end(JSON.stringify({ openAiKey: openAiKey.replaceAll(/\s/g,'') }));
                 break;
         }
     } catch (error) {
