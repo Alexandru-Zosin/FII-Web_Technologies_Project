@@ -18,7 +18,7 @@ async function getConnectionFromPool() {
 
 async function findUserByEmail(email) {
     const connection = await getConnectionFromPool();
-    const query = 'SELECT * FROM users WHERE email = ?'; // this should be in a separate file
+    const query = 'SELECT * FROM users WHERE email = ?';
     const user = await new Promise((res, rej) => {
         connection.query(query, [email], (err, result) => { // try catch in caz de eroare DB
             if (err)

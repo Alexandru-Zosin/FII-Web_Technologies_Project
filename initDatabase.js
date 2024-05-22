@@ -15,14 +15,14 @@ const databases = [
 ];
 
 // function to read JSON files
-const readJsonFile = (filePath) => {
+function readJsonFile(filePath) {
     return JSON.parse(fs.readFileSync(filePath, "utf8"));
-};
+}
 
-const connectToDatabase = (config) => {
-    return new Promise((res, rej) => {
+function connectToDatabase(config) {
+    return new Promise(function(res, rej) {
         const connection = mysql.createConnection(config);
-        connection.connect((err) => {
+        connection.connect(function(err) {
             if (err) {
                 rej(err);
             } else {
@@ -30,11 +30,12 @@ const connectToDatabase = (config) => {
             }
         });
     });
-};
+}
 
-const queryDatabase = (connection, sql, values = []) => {
-    return new Promise((res, rej) => {
-        connection.query(sql, values, (err, result) => {
+function queryDatabase(connection, sql, values) {
+    values = values || [];
+    return new Promise(function(res, rej) {
+        connection.query(sql, values, function(err, result) {
             if (err) {
                 rej(err);
             } else {
@@ -42,11 +43,11 @@ const queryDatabase = (connection, sql, values = []) => {
             }
         });
     });
-};
+}
 
-const closeConnection = (connection) => {
-    return new Promise((res, rej) => {
-        connection.end((err) => {
+function closeConnection(connection) {
+    return new Promise(function(res, rej) {
+        connection.end(function(err) {
             if (err) {
                 rej(err);
             } else {
@@ -54,9 +55,9 @@ const closeConnection = (connection) => {
             }
         });
     });
-};
+}
 
-const initializeDatabases = async () => {
+async function initializeDatabases() {
     try {
         const con = await connectToDatabase({
             host: "localhost",
@@ -111,31 +112,40 @@ const initializeDatabases = async () => {
         console.log("Connected to ReFI!");
 
         // Process each database configuration
-        for (const dbConfig of databases) {
-            const data = readJsonFile(path.join(__dirname, "databaseManagement", dbConfig.databaseConfigName));
+        for (var i = 0; i < databases.length; i++) {
+            var dbConfig = databases[i];
+            var data = readJsonFile(path.join(__dirname, "databaseManagement", dbConfig.databaseConfigName));
 
             if (data.length > 0) {
                 // Create table based on the first object keys
-                const columns = Object.keys(data[0]).map(key => `${key} ${key === 'id' ? 'INT' : 'VARCHAR(255)'}`).join(", ");
-                const createTableSql = `CREATE TABLE IF NOT EXISTS ${dbConfig.databaseName} (${columns});`;
+                var columns = Object.keys(data[0]).map(function(key) {
+                    return key + " " + (key === 'id' ? 'INT' : 'VARCHAR(255)');
+                }).join(", ");
+                var createTableSql = `CREATE TABLE IF NOT EXISTS ${dbConfig.databaseName} (${columns});`;
 
                 await queryDatabase(conReFI, createTableSql);
                 console.log(`Table ${dbConfig.databaseName} created.`);
 
                 // Insert data into the table
-                for (const record of data) {
+                for (var j = 0; j < data.length; j++) {
+                    var record = data[j];
                     // Find keys that contain arrays
-                    const arrayKeys = Object.keys(record).filter(key => Array.isArray(record[key]));
+                    var arrayKeys = Object.keys(record).filter(function(key) {
+                        return Array.isArray(record[key]);
+                    });
 
                     // Generate all records to be inserted
-                    let recordsToInsert = [record];
+                    var recordsToInsert = [record];
 
-                    for (const key of arrayKeys) {
-                        const newRecords = [];
+                    for (var k = 0; k < arrayKeys.length; k++) {
+                        var key = arrayKeys[k];
+                        var newRecords = [];
 
-                        for (const value of record[key]) {
-                            for (const rec of recordsToInsert) {
-                                const newRecord = { ...rec, [key]: value };
+                        for (var l = 0; l < record[key].length; l++) {
+                            var value = record[key][l];
+                            for (var m = 0; m < recordsToInsert.length; m++) {
+                                var rec = recordsToInsert[m];
+                                var newRecord = Object.assign({}, rec, { [key]: value });
                                 newRecords.push(newRecord);
                             }
                         }
@@ -144,10 +154,12 @@ const initializeDatabases = async () => {
                     }
 
                     // Insert all records into the table
-                    const keys = Object.keys(record).join(", ");
-                    const values = recordsToInsert.map(Object.values);
-                    const placeholders = recordsToInsert.map(() => `(${Object.values(record).map(() => '?').join(", ")})`).join(", ");
-                    const insertSql = `INSERT INTO ${dbConfig.databaseName} (${keys}) VALUES ${placeholders}`;
+                    var keys = Object.keys(record).join(", ");
+                    var values = recordsToInsert.map(Object.values);
+                    var placeholders = recordsToInsert.map(function() {
+                        return `(${Object.values(record).map(function() { return '?'; }).join(", ")})`;
+                    }).join(", ");
+                    var insertSql = `INSERT INTO ${dbConfig.databaseName} (${keys}) VALUES ${placeholders}`;
 
                     if (values.length > 0) {
                         await queryDatabase(conReFI, insertSql, values.flat());
@@ -166,6 +178,6 @@ const initializeDatabases = async () => {
     } catch (err) {
         console.error(err);
     }
-};
+}
 
 initializeDatabases();
