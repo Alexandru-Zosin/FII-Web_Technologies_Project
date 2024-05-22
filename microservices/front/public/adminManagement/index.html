@@ -1,18 +1,17 @@
 <!DOCTYPE HTML>
-
 <html lang="en">
-
 <head>
     <meta name="viewport" content="width=device-width, initial-scale=1">
     <link rel="stylesheet" href="./index.css">
     <title>ReFi</title>
+    <script src="./script.js" defer></script>
 </head>
 
 <body>
     <nav class='heading'>
         <ul class='nav-links'>
-            <li class="navBarMainUIButton">Home</li>
-            <li class="navBarTilte">ReFi</li>
+            <li class="navBarMainUIButton"></li>
+            <li class="navBarTilte">ReFi Admin Dashboard</li>
             <li class="themeToggle">
                 <svg class="sun" xmlns="http://www.w3.org/2000/svg" xmlns:xlink="http://www.w3.org/1999/xlink"
                     fill="#000000" height="800px" width="800px" version="1.1" id="Capa_1" viewBox="0 0 207.628 207.628"
@@ -40,38 +39,20 @@
             </li>
         </ul>
     </nav>
-
     <main class="fullwidth">
-        <div class="grid-container">
-            <div class="grid-header">
-                <div class="grid-cell">ID</div>
-                <div class="grid-cell">Name</div>
-                <div class="grid-cell">Age</div>
-                <div class="grid-cell">Country</div>
-            </div>
-            <div class="grid-row">
-                <div class="grid-cell">1</div>
-                <div class="grid-cell">John Doe</div>
-                <div class="grid-cell">30</div>
-                <div class="grid-cell">USA</div>
-            </div>
-            <div class="grid-row">
-                <div class="grid-cell">2</div>
-                <div class="grid-cell">Jane Smith</div>
-                <div class="grid-cell">25</div>
-                <div class="grid-cell">Canada</div>
+        <div class="container">
+            <div id='changeData' class="data-section">
+                <form class="data-form">
+                    <span> Select the DB to be edited: </span> 
+                    <select id="option" name="option">
+                    </select>
+                    <div class="form-group">
+                        <input type="submit" id ='edit' value="Edit">
+                    </div>
+                </form>
             </div>
         </div>
     </main>
-
-    <footer>
-        <ul class='footer-links'>
-            <li> GDPR </li>
-            <li> EULA </li>
-            <li> Contact </li>
-            <li id='copyright'> © 2024 Vlad Butnaru, Zosin Alexandru </li>
-        </ul>
-    </footer>
 </body>
 
 </html>

@@ -1,5 +1,6 @@
 const https = require('https');
 const fs = require('fs');
+const url = require('url');
 const path = require('path');
 const PORT = 443;
 
@@ -22,8 +23,8 @@ if (process.env.DEBUG_MODE == 'true') {
 
 const server = https.createServer(options, (req, res) => {
     try {
-        let safeSuffix = path.normalize(req.url).replace(/^(\.\.[\/\\])+/, '');
-
+        let parsedUrl = url.parse(req.url).pathname;
+        let safeSuffix = path.normalize(parsedUrl).replace(/^(\.\.[\/\\])+/, '');
         const filePath = path.join(baseDirectory, safeSuffix);
         // Determine content type by file extension
         const contentType = {

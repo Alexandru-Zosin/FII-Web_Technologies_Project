@@ -1,6 +1,7 @@
 {
     "version": "0.2.0",
     "configurations": [
+
         {
             "type": "node",
             "request": "launch",
@@ -69,6 +70,19 @@
         {
             "type": "node",
             "request": "launch",
+            "name": "Launch Admin-Management Server",
+            "skipFiles": [
+                "<node_internals>/**"
+            ],
+            "program": "${workspaceFolder}/microservices/admin-management/src/server.js",
+            "env": {
+                "NODE_ENV": "development",
+                "DEBUG_MODE": "true"
+              }
+        },
+        {
+            "type": "node",
+            "request": "launch",
             "name": "Launch databaseTechnologiesFilter Server",
             "skipFiles": [
                 "<node_internals>/**"
@@ -89,6 +103,7 @@
                 "Launch OPENAI Server",
                 "Launch PROXY Server",
                 "Launch userProfileHandler Server",
+                "Launch Admin-Management Server",
                 "Launch databaseTechnologiesFilter Server"
             ]
         }

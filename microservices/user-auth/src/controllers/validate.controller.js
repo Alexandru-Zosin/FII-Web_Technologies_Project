@@ -5,17 +5,25 @@ const url = require('url');
 
 
 async function validate(req, res) {
-    const cookies = {};
-    if (req.headers.cookie) {
-        const cookieArray = req.headers.cookie.split(';');
-        for (let cookie of cookieArray) {
-            const parts = cookie.split('=');
-            cookies[parts[0].trim()] = parts[1].trim();
+    let cookies = {};
+    let sessionToken;
+    try {
+        if (req.headers.cookie) {
+            const cookieArray = req.headers.cookie.split(';');
+            for (let cookie of cookieArray) {
+                const parts = cookie.split('=');
+                cookies[parts[0].trim()] = parts[1].trim();
+            }
         }
-    }
 
-    const sessionToken = cookies['default'];
-    if (!sessionToken) {
+        sessionToken = cookies['default'];
+        if (!sessionToken) {
+            res.writeHead(401, { 'Content-Type': 'application/json' });
+            return res.end(JSON.stringify({
+                error: 'No session token provided.'
+            }));
+        }
+    } catch (error) {
         res.writeHead(401, { 'Content-Type': 'application/json' });
         return res.end(JSON.stringify({
             error: 'No session token provided.'
@@ -37,19 +45,19 @@ async function validate(req, res) {
         // switchong remote port for the port from the origin since that is stable 
         const origin = req.headers.origin;
         let remotePort;
-      
+
         if (origin) {
-          const parsedUrl = new url.URL(origin);
-          remotePort = parsedUrl.port || '443';
+            const parsedUrl = new url.URL(origin);
+            remotePort = parsedUrl.port || '443';
         } else {
-          remotePort = req.socket.remotePort;
+            remotePort = req.socket.remotePort;
         }
-      
+
         switch (parseInt(remotePort)) {
             case PORTS.admin:
                 res.end(JSON.stringify({ userId, role }));
                 break;
-            case PORTS.userProfileHandler: 
+            case PORTS.userProfileHandler:
                 const hashedPassword = await getHashedPasswordForUserId(userId);
                 res.end(JSON.stringify({ hashedPassword: hashedPassword.password, userId }));
                 break;
