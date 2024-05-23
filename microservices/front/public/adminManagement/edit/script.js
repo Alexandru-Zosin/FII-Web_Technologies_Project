@@ -35,12 +35,12 @@ function createHandler(func, row) {
     }
 }
 
-function handleSubmit(row) {
+function handleUpdate(row) {
     let rowData = {};
     let cells = row.querySelectorAll('td');
 
     cells.forEach((cell, index) => {
-        if (index < cells.length - 2) { // exclude submit and delete buttons
+        if (index < cells.length - 2) { // exclude update and delete buttons
             rowData[`column${index + 1}`] = cell.textContent;
         }
     });
@@ -80,13 +80,13 @@ function handleDelete(row) {
     //location.reload();
 }
 
-function addSubmitDeleteButtons(row) {
-    let submitCell = document.createElement('td');
-    let submitButton = document.createElement('button');
-    submitButton.textContent = 'Submit';
-    submitButton.onclick = createHandler(handleSubmit, row);
-    submitCell.appendChild(submitButton);
-    row.appendChild(submitCell);
+function addUpdateDeleteButtons(row) {
+    let updateCell = document.createElement('td');
+    let updateButton = document.createElement('button');
+    updateButton.textContent = 'Update';
+    updateButton.onclick = createHandler(handleUpdate, row);
+    updateCell.appendChild(updateButton);
+    row.appendChild(updateCell);
 
     let deleteCell = document.createElement('td');
     let deleteButton = document.createElement('button');
@@ -106,7 +106,7 @@ function renderTable() {
         cell.textContent = column;
         row.appendChild(cell);
     }
-    row.appendChild(document.createElement('td')); // submit button
+    row.appendChild(document.createElement('td')); // update button
     row.appendChild(document.createElement('td')); // delete button
     tableHeaders.appendChild(row);
 
@@ -120,13 +120,13 @@ function renderTable() {
             cell.textContent = fetchedRow[key];
             row.appendChild(cell);
         }
-        addSubmitDeleteButtons(row);
+        addUpdateDeleteButtons(row);
 
         tableBody.appendChild(row);
     }
 }
 
-function addRow() {
+function createRow() {
     const tableBody = document.getElementById("tableBody");
     if (document.querySelectorAll('#tableBody .new-row').length === 0) {
         let row = document.createElement('tr');
@@ -135,13 +135,13 @@ function addRow() {
         for (let i = 0; i < Object.keys(databasesPayload["1"]).length; i++) {
             let cell = document.createElement('td');
             cell.setAttribute('contenteditable', true);
-            cell.textContent = ''; // or '0'
+            cell.textContent = '/'
             row.appendChild(cell);
         }
-        addSubmitDeleteButtons(row);
+        addUpdateDeleteButtons(row);
 
         tableBody.appendChild(row);
     }
 }
 
-document.getElementById('addRow').addEventListener("click", addRow);
+document.getElementById('createRow').addEventListener("click", createRow);
