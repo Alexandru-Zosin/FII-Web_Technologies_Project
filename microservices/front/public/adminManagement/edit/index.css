@@ -9,7 +9,7 @@ body {
     flex-direction: column;
     justify-content: space-between;
     font-family: Arial, sans-serif;
-    background-color: #f0f0f0; 
+    background-color: #f0f0f0;
     height: 100vh;
 }
 
@@ -18,11 +18,11 @@ body {
     flex-direction: row;
     justify-content: space-between;
     background-color: #333;
-    color: white; 
+    color: white;
     align-items: center;
     margin-top: 0;
-    padding: 0 20px; 
-    box-shadow: 0 2px 4px rgba(0,0,0,0.1); 
+    padding: 0 20px;
+    box-shadow: 0 2px 4px rgba(0,0,0,0.1);
 }
 
 .nav-links li {
@@ -30,7 +30,7 @@ body {
 }
 
 .fullwidth {
-    padding: 20px; 
+    padding: 20px;
     display: flex;
     box-sizing: border-box;
     flex: 1;
@@ -38,60 +38,65 @@ body {
 }
 
 .sun {
-    fill: currentColor; 
-    width: 30px; 
+    fill: currentColor;
+    width: 30px;
     height: 30px;
 }
 
 .container {
-    margin: 0 auto; 
-    background: white; 
+    margin: 0 auto;
+    background: white;
     padding: 20px;
-    box-shadow: 0 2px 4px rgba(0,0,0,0.2); 
-    border-radius: 8px; 
+    box-shadow: 0 2px 4px rgba(0,0,0,0.2);
+    border-radius: 8px;
     width: 75%;
 }
 
 .data-section {
     margin: 20px 0;
-    width:100%;
+    width: 100%;
 }
 
-.form-group {
+.table-controls {
     margin-top: 20px;
-    margin-bottom: 20px;
-    padding-right: 0px;
-    margin-right: 0px;
+    display: flex;
+    justify-content: space-between;
 }
 
-.input, .data-form input[type="text"], .data-form input[type="password"], .data-form input[type="submit"] {
+button {
     padding: 10px;
-    margin-top: 5px; 
-    width: calc(100% - 22px); 
-    box-sizing: border-box;
-    border: 1px solid #ccc;
-    border-radius: 4px;
-}
-
-.data-form input[type="submit"] {
     background-color: #0056b3;
     color: white;
     border: none;
+    border-radius: 4px;
     cursor: pointer;
-    transition: background-color 0.3s ease;
 }
 
-.data-form input[type="submit"]:hover {
+button:hover {
     background-color: #003d82;
 }
 
+textarea {
+    width: 100%;
+    box-sizing: border-box;
+    border: 1px solid #ccc;
+    border-radius: 4px;
+    padding: 10px;
+}
 
-@media (max-width: 768px) {
-    #copyright {
-        display: none;
-    }
+form {
+    display: flex;
+    flex-direction: column;
+}
 
-    #otherInteractions {
-        flex-direction: column;
-    }
+form > button {
+    margin-top: 10px;
+}
+
+form > button.delete {
+    background-color: #b30000;
+}
+
+form > button.delete:hover {
+    background-color: #820000;
 }

@@ -2,9 +2,16 @@ const urlParams = new URLSearchParams(window.location.search);
 const selectedDb = urlParams.get('db');
 console.log(selectedDb);
 
+var databasesPayload;
+var startRow = 1;
+var endRow = 10;
+
 window.onload = async () => {
-    var startRow = 1;
-    var endRow = 10;
+    await fetchTable(startRow, endRow);
+    renderTable();
+}
+
+async function fetchTable(startRow, endRow) {
     const response = await fetch(`https://localhost:3001/${selectedDb}?startRow=${startRow}&endRow=${endRow}`, {
         method: "GET",
         credentials: 'include',
@@ -15,13 +22,126 @@ window.onload = async () => {
         },
     });
 
-    var databasesPayload;
     if (response.status === 200) {
         databasesPayload = await response.json();
     } else {
         window.alert("An error has occured.");
     }
-
-    for (key in databasesPayload["1"])
-        console.log(key);
 }
+
+function createHandler(func, row) {
+    return function() {
+        func(row);
+    }
+}
+
+function handleSubmit(row) {
+    let rowData = {};
+    let cells = row.querySelectorAll('td');
+
+    cells.forEach((cell, index) => {
+        if (index < cells.length - 2) { // exclude submit and delete buttons
+            rowData[`column${index + 1}`] = cell.textContent;
+        }
+    });
+    console.log(rowData);
+    // Send a POST or PUT request with rowData
+}
+
+function handleDelete(row) {
+    let rowData = {};
+    let cells = row.querySelectorAll('td');
+    cells.forEach((cell, index) => {
+        if (index < cells.length - 2) {
+            rowData[`column${index + 1}`] = cell.textContent;
+        }
+    });
+    console.log(rowData);
+
+    /*
+     // fetch(`https://localhost:3001/delete`, {
+    //     method: 'DELETE',
+    //     credentials: 'include',
+    //     mode: 'cors',
+    //     headers: {
+    //         'Accept': 'application/json',
+    //         'Content-Type': 'application/json',
+    //     },
+    //     body: JSON.stringify(rowData),
+    // }).then(response => {
+    //     if (response.status === 200) {
+    //         row.remove();
+    //     } else {
+    //         window.alert('An error has occurred.');
+    //     }
+    // });
+    */
+    row.remove();
+    //location.reload();
+}
+
+function addSubmitDeleteButtons(row) {
+    let submitCell = document.createElement('td');
+    let submitButton = document.createElement('button');
+    submitButton.textContent = 'Submit';
+    submitButton.onclick = createHandler(handleSubmit, row);
+    submitCell.appendChild(submitButton);
+    row.appendChild(submitCell);
+
+    let deleteCell = document.createElement('td');
+    let deleteButton = document.createElement('button');
+    deleteButton.textContent = 'Delete';
+    deleteButton.onclick = createHandler(handleDelete, row);
+    deleteCell.appendChild(deleteButton);
+    row.appendChild(deleteCell);
+}
+
+function renderTable() {
+    var row, cell;
+    const tableHeaders = document.getElementById("tableHeader");
+    tableHeaders.innerHTML = '';
+    row = document.createElement('tr');
+    for (let column in databasesPayload["1"]) {
+        cell = document.createElement('td');
+        cell.textContent = column;
+        row.appendChild(cell);
+    }
+    row.appendChild(document.createElement('td')); // submit button
+    row.appendChild(document.createElement('td')); // delete button
+    tableHeaders.appendChild(row);
+
+    const tableBody = document.getElementById("tableBody");
+    tableBody.innerHTML = '';
+    for (let fetchedRow of Object.values(databasesPayload)) {
+        row = document.createElement('tr');
+        for (let key in fetchedRow) {
+            cell = document.createElement('td');
+            cell.setAttribute('contenteditable', true);
+            cell.textContent = fetchedRow[key];
+            row.appendChild(cell);
+        }
+        addSubmitDeleteButtons(row);
+
+        tableBody.appendChild(row);
+    }
+}
+
+function addRow() {
+    const tableBody = document.getElementById("tableBody");
+    if (document.querySelectorAll('#tableBody .new-row').length === 0) {
+        let row = document.createElement('tr');
+        row.classList.add('new-row');
+
+        for (let i = 0; i < Object.keys(databasesPayload["1"]).length; i++) {
+            let cell = document.createElement('td');
+            cell.setAttribute('contenteditable', true);
+            cell.textContent = ''; // or '0'
+            row.appendChild(cell);
+        }
+        addSubmitDeleteButtons(row);
+
+        tableBody.appendChild(row);
+    }
+}
+
+document.getElementById('addRow').addEventListener("click", addRow);
