@@ -35,7 +35,7 @@ function createHandler(func, row) {
         func(row);
     }
 }
-
+//here
 function handleUpdate(row) {
     let rowData = {};
     let cells = row.querySelectorAll('td');
@@ -48,7 +48,7 @@ function handleUpdate(row) {
     console.log(rowData);
     // Send a POST or PUT request with rowData
 }
-
+//here
 function handleDelete(row) {
     let rowData = {};
     let cells = row.querySelectorAll('td');
@@ -79,6 +79,17 @@ function handleDelete(row) {
     */
     row.remove();
     //location.reload();
+}
+//here
+function handleCreate(row) {
+    let rowData = {};
+    let cells = row.querySelectorAll('td');
+    cells.forEach((cell, index) => {
+        if (index < cells.length - 1) {
+            rowData[`column${index + 1}`] = cell.textContent;
+        }
+    });
+    console.log(rowData);
 }
 
 function addUpdateDeleteButtons(row) {
@@ -139,7 +150,13 @@ function createRow() {
             cell.textContent = '/'
             row.appendChild(cell);
         }
-        addUpdateDeleteButtons(row);
+
+        let createCell = document.createElement('td');
+        let createButton = document.createElement('button');
+        createButton.textContent = 'Create';
+        createButton.onclick = createHandler(handleCreate, row);
+        createCell.appendChild(createButton);
+        row.appendChild(createCell);
 
         tableBody.appendChild(row);
     }

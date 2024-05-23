@@ -22,3 +22,20 @@ document.getElementById("submit-button").addEventListener('click', async () => {
         window.alert("Login failed.");
     }
 });
+
+window.onload = async () => {
+    const response = await fetch("https://localhost:3000/validate", {
+        method: "POST",
+        credentials: 'include',
+        mode: "cors",
+        headers: {
+            "Accept": "application/json",
+            "Content-Type": "application/json",
+        },
+        body: JSON.stringify({}),
+    });
+
+    if (response.status === 200) {
+        window.location.href = "https://localhost/mainPage/index.html";
+    }
+};

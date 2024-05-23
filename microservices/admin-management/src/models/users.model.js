@@ -25,24 +25,6 @@ async function getUsersTables() {
     return tables;
 }
 
-/*async function getTableColumnNames(tableName) {
-    const connection = await getConnectionFromPool(usersPool);
-    const query = `
-        SELECT COLUMN_NAME 
-        FROM INFORMATION_SCHEMA.COLUMNS 
-        WHERE TABLE_SCHEMA = 'ReFIUSERS' AND TABLE_NAME = ?;
-    `;
-    try {
-        const results = await queryDatabase(connection, query, [tableName]);
-        connection.release();
-        const columnNames = results.map(row => row.COLUMN_NAME);
-        return columnNames;
-    } catch (err) {
-        connection.release();
-        throw err;
-    }
-}*/
-
 async function getTable(tableName, startRow = 1, endRow = 10) {
     const connection = await getConnectionFromPool(usersPool);
     // https://www.w3schools.com/php/php_mysql_select_limit.asp
