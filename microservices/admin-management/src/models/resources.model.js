@@ -1,15 +1,16 @@
 const mysql = require('mysql');
-const { connectToDatabase, queryDatabase, closeConnection } = require('../../utils/databaseOperations');
+const { getConnectionFromPool, queryDatabase } = require('../../utils/databaseConnection');
 
-const config = {
+const resourcesPool = mysql.createPool({
+    connectionLimit: 10,
     host: 'localhost',
     user: 'root',
     password: '',
     database: 'ReFI'
-};
+});
 
 async function getResourcesTables() {
-    const conUsers = await connectToDatabase(config);
+    const connection = await getConnectionFromPool(resourcesPool);
 
     const selectTablesQuery = `
         SELECT TABLE_NAME 
@@ -18,10 +19,27 @@ async function getResourcesTables() {
         AND TABLE_SCHEMA = 'ReFI';
     `;
 
-    const tables = await queryDatabase(conUsers, selectTablesQuery);
-    await closeConnection(conUsers);
+    const tables = await queryDatabase(connection, selectTablesQuery);
+    connection.release();
 
     return tables;
 }
 
-module.exports = { getResourcesTables };
+async function getTable(tableName, startRow = 1, endRow = 10) {
+    const connection = await getConnectionFromPool(usersPool);
+    // https://www.w3schools.com/php/php_mysql_select_limit.asp
+    const offset = startRow - 1;
+    const limit = endRow - startRow + 1;
+    const query = `SELECT * FROM ?? LIMIT ? OFFSET ?`;
+
+    try {
+        const results = await queryDatabase(connection, query, [tableName, limit, offset]);
+        connection.release();
+        return results;
+    } catch (err) {
+        connection.release();
+        throw err;
+    }
+}
+
+module.exports = { getResourcesTables, getTable };

@@ -3,7 +3,6 @@ const { PORTS } = require('../../whitelistports');
 const { getHashedPasswordForUserId } = require('../models/user.model');
 const url = require('url');
 
-
 async function validate(req, res) {
     let cookies = {};
     let sessionToken;

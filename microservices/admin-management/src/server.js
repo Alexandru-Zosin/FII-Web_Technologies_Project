@@ -2,13 +2,16 @@ const https = require('https');
 const fs = require('fs');
 const path = require('path');
 const fetch = require('node-fetch');
+const url = require('url');
 const { parseJSON } = require('../utils/parseJSONBody');
 const { setCORSHeadersOnValidOrigin } = require('../utils/corsHeaders');
 require('dotenv').config({ path: path.join(__dirname, './.env') });
 
 const PORT = 3001;
 
-const { getDashboard, getUsers, getResources } = require('./controllers/dashboard.controller.js');
+const { getDashboard } = require('./controllers/dashboard.controller.js');
+const { getUsers, uploadUser, deleteUser, updateUser } = require('./controllers/users.controller.js');
+const { getResources, uploadResource, deleteResource, updateResource } = require('./controllers/resources.controller.js');
 
 let options;
 if (process.env.DEBUG_MODE === 'true') {
@@ -53,63 +56,85 @@ const server = https.createServer(options, (req, res) => {
     if (!setCORSHeadersOnValidOrigin(req, res))
         return;
 
-    if (req.method === 'GET') {
-        if (!authorizeRequest(req)) {
-            res.writeHead(401, {
-                'Content-Type': 'application/json',
-            });
-            return res.end(JSON.stringify({
-                error: 'Unauthorized.'
-            }));
-        }
+    if (req.method === 'OPTIONS') {
+        res.writeHead(204, { 'Content-Length': '0' });
+        return res.end();
+    }
 
-        switch (req.url) {
-            case '/dashboard':
-                getDashboard(req, res);
+    if (!authorizeRequest(req)) {
+        res.writeHead(401, {
+            'Content-Type': 'application/json',
+        });
+        return res.end(JSON.stringify({
+            error: 'Unauthorized.'
+        }));
+    }
+
+    if (req.method === 'GET' && req.url === '/dashboard') {
+        getDashboard(req, res);
+        return;
+    }
+
+    const parsedUrl = url.parse(req.url, true);
+    const pathname = parsedUrl.pathname;
+    const userTableMatch = pathname.match(/^\/users\/([^\/]+)$/);
+    const resourceTableMatch = pathname.match(/^\/resources\/([^\/]+)$/);
+
+    if (userTableMatch) {
+        const userTable = userTableMatch[1];
+        switch (req.method) {
+            case 'GET':
+                getUsers(req, res, userTable);
                 break;
-            case '/users':
-                getUsers(req, res);
+            case 'POST':
+                parseJSON(req, res, () => {
+                    uploadUser(req, res, userTable);
+                });
                 break;
-            case '/resources':
-                getResources(req, res);
+            case 'DELETE':
+                parseJSON(req, res, () => {
+                    deleteUser(req, res, userTable);
+                });
+                break;
+            case 'PUT':
+                parseJSON(req, res, () => {
+                    updateUser(req, res, userTable);
+                });
                 break;
             default:
-                res.writeHead(404, { 'Content-Type': 'application/json' });
-                res.end(JSON.stringify({
-                    error: 'Not found.'
-                }));
+                res.writeHead(405, { 'Content-Type': 'application/json' });
+                res.end(JSON.stringify({ error: 'Method not allowed.' }));
                 break;
         }
-    } else if (req.method === 'POST') {
-        if (!authorizeRequest(req)) {
-            res.writeHead(401, {
-                'Content-Type': 'application/json',
-            });
-            return res.end(JSON.stringify({
-                error: 'Unauthorized.'
-            }));
+    } else if (resourceTableMatch) {
+        const resourceTable = resourceTableMatch[1];
+        switch (req.method) {
+            case 'GET':
+                getResources(req, res, resourceTable);
+                break;
+            case 'POST':
+                parseJSON(req, res, () => {
+                    uploadResource(req, res, resourceTable);
+                });
+                break;
+            case 'DELETE':
+                parseJSON(req, res, () => {
+                    deleteResource(req, res, resourceTable);
+                });
+                break;
+            case 'PUT':
+                parseJSON(req, res, () => {
+                    updateResource(req, res, resourceTable);
+                });
+                break;
+            default:
+                res.writeHead(405, { 'Content-Type': 'application/json' });
+                res.end(JSON.stringify({ error: 'Method not allowed.' }));
+                break;
         }
-
-        parseJSON(req, res, () => {
-            switch (req.url) {
-                case '/users/':
-                    break;
-                case '/resources':
-                    break;
-                default:
-                    res.writeHead(404, { 'Content-Type': 'application/json' });
-                    res.end(JSON.stringify({
-                        error: 'Not found.'
-                    }));
-                    break;
-            }
-        });
-    } else if (req.method === 'OPTIONS') {
-        res.writeHead(204, { 'Content-Length': '0' });
-        res.end();
     } else {
         res.writeHead(404, { 'Content-Type': 'application/json' });
-        res.end(JSON.stringify({ error: 'Error.' }));
+        res.end(JSON.stringify({ error: 'Not found.' }));
     }
 });
 
