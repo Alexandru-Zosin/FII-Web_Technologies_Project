@@ -26,8 +26,8 @@ async function getResourcesTables() {
 }
 
 async function getTable(tableName, startRow = 1, endRow = 10) {
-    const connection = await getConnectionFromPool(usersPool);
-    // https://www.w3schools.com/php/php_mysql_select_limit.asp
+    const connection = await getConnectionFromPool(resourcesPool);
+
     const offset = startRow - 1;
     const limit = endRow - startRow + 1;
     const query = `SELECT * FROM ?? LIMIT ? OFFSET ?`;
