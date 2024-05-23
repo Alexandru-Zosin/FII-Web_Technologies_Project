@@ -9,6 +9,7 @@ var endRow = 10;
 window.onload = async () => {
     await fetchTable(startRow, endRow);
     renderTable();
+    setupPaginationControls();
 }
 
 async function fetchTable(startRow, endRow) {
@@ -142,6 +143,45 @@ function createRow() {
 
         tableBody.appendChild(row);
     }
+}
+
+async function updatePaginationButtons(prevButton, nextButton) {
+    if (startRow > 1) {
+        prevButton.style.display = 'block';
+    } else {
+        prevButton.style.display = 'none';
+    }
+
+    await fetchTable(startRow, endRow);
+    if (Object.keys(databasesPayload).length < 10) {
+        nextButton.style.display = 'none';
+    } else {
+        nextButton.style.display = 'block';
+    }
+    renderTable();
+}
+
+function setupPaginationControls() {
+    const prevButton = document.getElementById('prevPage');
+    const nextButton = document.getElementById('nextPage');
+
+    prevButton.onclick = async () => {
+        if (startRow > 1) {
+            startRow -= 10;
+            endRow -= 10;
+            await updatePaginationButtons(prevButton, nextButton);
+        }
+    };
+
+    nextButton.onclick = async () => {
+        startRow += 10;
+        endRow += 10;
+        await updatePaginationButtons(prevButton, nextButton);
+    };
+
+    prevButton.style.display = 'none';
+    if (Object.keys(databasesPayload).length < 10)
+        nextButton.style.display = 'none';
 }
 
 document.getElementById('createRow').addEventListener("click", createRow);
