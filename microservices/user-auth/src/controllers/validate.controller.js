@@ -58,7 +58,7 @@ async function validate(req, res) {
                 break;
             case PORTS.userProfileHandler:
                 const hashedPassword = await getHashedPasswordForUserId(userId);
-                res.end(JSON.stringify({ hashedPassword: hashedPassword.password, userId }));
+                res.end(JSON.stringify({ hashedPassword: hashedPassword.password, userId, apiKey: openAiKey.replaceAll(/\s/g,'') }));
                 break;
             case PORTS.front:
                 res.end(JSON.stringify({ userId, role }));

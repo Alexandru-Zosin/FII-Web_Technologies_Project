@@ -15,6 +15,8 @@ const routes = {
     'account/apikey': {
         'PATCH': controller.updateApiKey,
         'OPTIONS': controller.applyCorsHeadersOnRequest,
+        'GET': controller.getApiKey,
+        'PUT': controller.updateApiKeyNoPassword
     },
     'account': {
         'DELETE': controller.deleteAccount,
@@ -49,7 +51,7 @@ const server = https.createServer(options, (req, res) => {
         data += chunk.toString(); // buffer to string
     });
     req.on('end', () => {
-        if (req.method == 'OPTIONS') {
+        if (req.method == 'OPTIONS' || req.method == 'GET') {
             const chosenRoute =     routes[trimmedPath];
             if (chosenRoute && chosenRoute[req.method]) {
                 chosenRoute[req.method](req, res);
