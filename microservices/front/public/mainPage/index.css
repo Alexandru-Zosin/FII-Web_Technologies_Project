@@ -166,3 +166,8 @@ the definition of ratio in the css validator is outdated
   @keyframes l15{ 
     100%{transform: rotate(1turn)}
   }
+
+  a {
+    text-decoration: none;
+    color: white
+}

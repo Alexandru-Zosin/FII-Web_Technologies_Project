@@ -29,6 +29,11 @@ body {
     list-style-type: none;
 }
 
+a {
+    text-decoration: none;
+    color: white
+}
+
 .fullwidth {
     padding: 20px; 
     display: flex;
