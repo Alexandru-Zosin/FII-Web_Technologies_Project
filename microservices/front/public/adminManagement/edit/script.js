@@ -5,11 +5,12 @@ console.log(selectedDb);
 var databasesPayload;
 var startRow = 1;
 var endRow = 10;
+const prevButton = document.getElementById('prevPage');
+const nextButton = document.getElementById('nextPage');
 
 window.onload = async () => {
     await fetchTable(startRow, endRow);
     renderTable();
-    setupPaginationControls();
 }
 
 async function fetchTable(startRow, endRow) {
@@ -30,84 +31,6 @@ async function fetchTable(startRow, endRow) {
     }
 }
 
-function createHandler(func, row) {
-    return function() {
-        func(row);
-    }
-}
-//here
-function handleUpdate(row) {
-    let rowData = {};
-    let cells = row.querySelectorAll('td');
-
-    cells.forEach((cell, index) => {
-        if (index < cells.length - 2) { // exclude update and delete buttons
-            rowData[`column${index + 1}`] = cell.textContent;
-        }
-    });
-    console.log(rowData);
-    // Send a POST or PUT request with rowData
-}
-//here
-function handleDelete(row) {
-    let rowData = {};
-    let cells = row.querySelectorAll('td');
-    cells.forEach((cell, index) => {
-        if (index < cells.length - 2) {
-            rowData[`column${index + 1}`] = cell.textContent;
-        }
-    });
-    console.log(rowData);
-
-    /*
-     // fetch(`https://localhost:3001/delete`, {
-    //     method: 'DELETE',
-    //     credentials: 'include',
-    //     mode: 'cors',
-    //     headers: {
-    //         'Accept': 'application/json',
-    //         'Content-Type': 'application/json',
-    //     },
-    //     body: JSON.stringify(rowData),
-    // }).then(response => {
-    //     if (response.status === 200) {
-    //         row.remove();
-    //     } else {
-    //         window.alert('An error has occurred.');
-    //     }
-    // });
-    */
-    row.remove();
-    //location.reload();
-}
-//here
-function handleCreate(row) {
-    let rowData = {};
-    let cells = row.querySelectorAll('td');
-    cells.forEach((cell, index) => {
-        if (index < cells.length - 1) {
-            rowData[`column${index + 1}`] = cell.textContent;
-        }
-    });
-    console.log(rowData);
-}
-
-function addUpdateDeleteButtons(row) {
-    let updateCell = document.createElement('td');
-    let updateButton = document.createElement('button');
-    updateButton.textContent = 'Update';
-    updateButton.onclick = createHandler(handleUpdate, row);
-    updateCell.appendChild(updateButton);
-    row.appendChild(updateCell);
-
-    let deleteCell = document.createElement('td');
-    let deleteButton = document.createElement('button');
-    deleteButton.textContent = 'Delete';
-    deleteButton.onclick = createHandler(handleDelete, row);
-    deleteCell.appendChild(deleteButton);
-    row.appendChild(deleteCell);
-}
-
 function renderTable() {
     var row, cell;
     const tableHeaders = document.getElementById("tableHeader");
@@ -118,8 +41,8 @@ function renderTable() {
         cell.textContent = column;
         row.appendChild(cell);
     }
-    row.appendChild(document.createElement('td')); // update button
-    row.appendChild(document.createElement('td')); // delete button
+    row.appendChild(document.createElement('td')); // update button placeholder
+    row.appendChild(document.createElement('td')); // delete button placeholder
     tableHeaders.appendChild(row);
 
     const tableBody = document.getElementById("tableBody");
@@ -135,6 +58,100 @@ function renderTable() {
         addUpdateDeleteButtons(row);
 
         tableBody.appendChild(row);
+    }
+
+    if (startRow > 1) {
+        prevButton.style.display = 'block';
+    } else {
+        prevButton.style.display = 'none';
+    }
+
+    if (Object.keys(databasesPayload).length < 10) {
+        nextButton.style.display = 'none';
+    } else {
+        nextButton.style.display = 'block';
+    }
+}
+
+function mapColumnsToValues(row, buttonsNum) {
+    let rowData = {};
+    let cells = row.querySelectorAll('td');
+    let keys = document.querySelectorAll('#tableHeader td');
+
+    cells.forEach((cell, index) => {
+        if (index < cells.length - buttonsNum) { // 2: excl. update,delete bts, 1: excl. create btn
+            rowData[`${keys[index].textContent}`] = cell.textContent;
+        }
+    });
+    return rowData;
+}
+
+async function handleUpdate(row) {
+    const updatedData = mapColumnsToValues(row, 2);
+    console.log(updatedData);
+
+    const response = await fetch(`https://localhost:3001/${selectedDb}`, {
+        method: "PUT",
+        credentials: 'include',
+        mode: "cors",
+        headers: {
+            "Accept": "application/json",
+            "Content-Type": "application/json",
+        },
+        body: JSON.stringify(updatedData),
+    });
+
+    if (response.status === 200) {
+        await fetchTable(startRow, endRow);
+        renderTable();
+    } else {
+        window.alert("An error has occured."); // & Revert to before values?
+    }
+}
+
+async function handleDelete(row) {
+    const deletedData = mapColumnsToValues(row, 2);
+    console.log(deletedData);
+
+    const response = await fetch(`https://localhost:3001/${selectedDb}`, {
+        method: "DELETE",
+        credentials: 'include',
+        mode: "cors",
+        headers: {
+            "Accept": "application/json",
+            "Content-Type": "application/json",
+        },
+        body: JSON.stringify(deletedData),
+    });
+
+    if (response.status === 200) {
+        await fetchTable(startRow, endRow);
+        renderTable();
+    } else {
+        window.alert("An error has occured.");
+    }
+}
+
+async function handleCreate(row) {
+    const createdData = mapColumnsToValues(row, 1);
+    console.log(createdData);
+
+    const response = await fetch(`https://localhost:3001/${selectedDb}`, {
+        method: "POST",
+        credentials: 'include',
+        mode: "cors",
+        headers: {
+            "Accept": "application/json",
+            "Content-Type": "application/json",
+        },
+        body: JSON.stringify(createdData),
+    });
+
+    if (response.status === 200) {
+        await fetchTable(startRow, endRow);
+        renderTable();
+    } else {
+        window.alert("An error has occured.");
     }
 }
 
@@ -162,43 +179,42 @@ function createRow() {
     }
 }
 
-async function updatePaginationButtons(prevButton, nextButton) {
+function createHandler(func, row) {
+    return function() {
+        func(row);
+    }
+}
+
+async function addUpdateDeleteButtons(row) {
+    let updateCell = document.createElement('td');
+    let updateButton = document.createElement('button');
+    updateButton.textContent = 'Update';
+    updateButton.onclick = createHandler(handleUpdate, row);
+    updateCell.appendChild(updateButton);
+    row.appendChild(updateCell);
+
+    let deleteCell = document.createElement('td');
+    let deleteButton = document.createElement('button');
+    deleteButton.textContent = 'Delete';
+    deleteButton.onclick = createHandler(handleDelete, row);
+    deleteCell.appendChild(deleteButton);
+    row.appendChild(deleteCell);
+}
+
+prevButton.onclick = async () => {
     if (startRow > 1) {
-        prevButton.style.display = 'block';
-    } else {
-        prevButton.style.display = 'none';
+        startRow -= 10;
+        endRow -= 10;
+        await fetchTable(startRow, endRow);
+        renderTable();
     }
+};
 
+nextButton.onclick = async () => {
+    startRow += 10;
+    endRow += 10;
     await fetchTable(startRow, endRow);
-    if (Object.keys(databasesPayload).length < 10) {
-        nextButton.style.display = 'none';
-    } else {
-        nextButton.style.display = 'block';
-    }
     renderTable();
-}
-
-function setupPaginationControls() {
-    const prevButton = document.getElementById('prevPage');
-    const nextButton = document.getElementById('nextPage');
-
-    prevButton.onclick = async () => {
-        if (startRow > 1) {
-            startRow -= 10;
-            endRow -= 10;
-            await updatePaginationButtons(prevButton, nextButton);
-        }
-    };
-
-    nextButton.onclick = async () => {
-        startRow += 10;
-        endRow += 10;
-        await updatePaginationButtons(prevButton, nextButton);
-    };
-
-    prevButton.style.display = 'none';
-    if (Object.keys(databasesPayload).length < 10)
-        nextButton.style.display = 'none';
-}
+};
 
 document.getElementById('createRow').addEventListener("click", createRow);
