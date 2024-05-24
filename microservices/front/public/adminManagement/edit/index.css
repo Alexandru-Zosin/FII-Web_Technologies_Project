@@ -20,9 +20,8 @@ body {
     background-color: #333;
     color: white;
     align-items: center;
-    margin-top: 0;
     padding: 0 20px;
-    box-shadow: 0 2px 4px rgba(0,0,0,0.1);
+    box-shadow: 0 2px 4px rgba(0, 0, 0, 0.1);
 }
 
 .nav-links li {
@@ -47,9 +46,9 @@ body {
     margin: 0 auto;
     background: white;
     padding: 20px;
-    box-shadow: 0 2px 4px rgba(0,0,0,0.2);
+    box-shadow: 0 2px 4px rgba(0, 0, 0, 0.2);
     border-radius: 8px;
-    width: 75%;
+    width: 90%;
 }
 
 .data-section {
@@ -65,15 +64,56 @@ body {
 
 button {
     padding: 10px;
-    background-color: #0056b3;
     color: white;
     border: none;
     border-radius: 4px;
     cursor: pointer;
+    transition: background-color 0.3s ease, transform 0.2s ease;
+    max-width: 120px; /* Maximum width for buttons */
 }
 
 button:hover {
+    transform: scale(1.05);
+}
+
+#prevPage {
+    background-color: #0056b3;
+}
+
+#prevPage:hover {
     background-color: #003d82;
+}
+
+#nextPage {
+    background-color: #0056b3;
+}
+
+#nextPage:hover {
+    background-color: #003d82;
+}
+
+#createRow {
+    background-color: #5cb85c;
+}
+
+#createRow:hover {
+    background-color: #4cae4c;
+}
+
+button.update {
+    background-color: #0056b3;
+}
+
+button.update:hover {
+    background-color: #003d82;
+}
+
+button.delete {
+    background-color: #d9534f;
+}
+
+button.delete:hover {
+    background-color: #c9302c;
 }
 
 textarea {
@@ -99,4 +139,41 @@ form > button.delete {
 
 form > button.delete:hover {
     background-color: #820000;
+}
+
+table {
+    width: 100%;
+    border-collapse: collapse;
+    margin-top: 20px;
+    table-layout: fixed; /* Added for fixed table layout */
+}
+
+th, td {
+    border: 1px solid #ddd;
+    padding: 8px;
+    text-align: left;
+    max-width: 150px; /* Added maximum width for table cells */
+    word-wrap: break-word; /* Ensure text wraps within the cell */
+}
+
+th {
+    background-color: #f2f2f2;
+    font-weight: bold;
+}
+
+tr:nth-child(even) {
+    background-color: #f9f9f9;
+}
+
+tr:hover {
+    background-color: #f1f1f1;
+}
+
+.table-controls button {
+    width: 32%;
+}
+
+td button {
+    width: 100%; /* Ensure buttons take full cell width */
+    max-width: 100px; /* Set maximum width for buttons in table cells */
 }

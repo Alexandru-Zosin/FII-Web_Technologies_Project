@@ -195,6 +195,7 @@ async function addUpdateDeleteButtons(row) {
     let updateCell = document.createElement('td');
     let updateButton = document.createElement('button');
     updateButton.textContent = 'Update';
+    updateButton.classList.add('update');
     updateButton.onclick = createHandler(handleUpdate, row);
     updateCell.appendChild(updateButton);
     row.appendChild(updateCell);
@@ -202,6 +203,7 @@ async function addUpdateDeleteButtons(row) {
     let deleteCell = document.createElement('td');
     let deleteButton = document.createElement('button');
     deleteButton.textContent = 'Delete';
+    deleteButton.classList.add('delete');
     deleteButton.onclick = createHandler(handleDelete, row);
     deleteCell.appendChild(deleteButton);
     row.appendChild(deleteCell);
