@@ -1,5 +1,6 @@
 const mysql = require('mysql');
-const { getConnectionFromPool, queryDatabase } = require('../../utils/databaseConnection');
+const { getConnectionFromPool } = require('../../utils/databaseConnection');
+const { getTables, getTable, uploadToTable, updateInTable, deleteFromTable } = require('../../utils/databaseTemplateModel');
 
 const usersPool = mysql.createPool({
     connectionLimit: 10,
@@ -11,74 +12,33 @@ const usersPool = mysql.createPool({
 
 async function getUsersTables() {
     const connection = await getConnectionFromPool(usersPool);
-
-    const selectTablesQuery = `
-        SELECT TABLE_NAME 
-        FROM INFORMATION_SCHEMA.TABLES 
-        WHERE TABLE_TYPE = 'BASE TABLE' 
-        AND TABLE_SCHEMA = 'ReFIUSERS';
-    `;
-
-    const tables = await queryDatabase(connection, selectTablesQuery);
-    connection.release();
-
-    return tables;
+    return getTables(connection, "ReFIUSERS");
 }
 
-async function getTable(tableName, startRow = 1, endRow = 10) {
+async function getUserTable(tableName, startRow = 1, endRow = 10) {
     const connection = await getConnectionFromPool(usersPool);
-    // https://www.w3schools.com/php/php_mysql_select_limit.asp
-    const offset = startRow - 1;
-    const limit = endRow - startRow + 1;
-    const query = `SELECT * FROM ?? LIMIT ? OFFSET ?`;
-
-    try {
-        const results = await queryDatabase(connection, query, [tableName, limit, offset]);
-        connection.release();
-        return results;
-    } catch (err) {
-        connection.release();
-        throw err;
-    }
+    return getTable(connection, tableName, startRow, endRow);
 }
 
-async function uploadToTable(tableName, values) {
+async function uploadToUserTable(tableName, values) {
     const connection = await getConnectionFromPool(usersPool);
-    const query = `INSERT INTO ?? SET ?`;
-    try {
-        const results = await queryDatabase(connection, query, [tableName, values]);
-        connection.release();
-        return results;
-    } catch (err) {
-        connection.release();
-        throw err;
-    }
+    return uploadToTable(connection, tableName, values);
 }
 
-async function updateInTable(tableName, values, idField, idValue) {
+async function updateInUserTable(tableName, idFields, oldIdValues, newIdValues) {
     const connection = await getConnectionFromPool(usersPool);
-    const query = `UPDATE ?? SET ? WHERE ?? = ?`;
-    try {
-        const results = await queryDatabase(connection, query, [tableName, values, idField, idValue]);
-        connection.release();
-        return results;
-    } catch (err) {
-        connection.release();
-        throw err;
-    }
+    return updateInTable(connection, tableName, idFields, oldIdValues, newIdValues);
 }
 
-async function deleteFromTable(tableName, idField, idValue) {
+async function deleteFromUserTable(tableName, idFields, idValues) {
     const connection = await getConnectionFromPool(usersPool);
-    const query = `DELETE FROM ?? WHERE ?? = ?`;
-    try {
-        const results = await queryDatabase(connection, query, [tableName, idField, idValue]);
-        connection.release();
-        return results;
-    } catch (err) {
-        connection.release();
-        throw err;
-    }
+    return deleteFromTable(connection, tableName, idFields, idValues);
 }
 
-module.exports = { getUsersTables, getTable, uploadToTable, updateInTable, deleteFromTable };
+module.exports = {
+    getUsersTables: getUsersTables,
+    getTable: getUserTable,
+    uploadToTable: uploadToUserTable,
+    updateInTable: updateInUserTable,
+    deleteFromTable: deleteFromUserTable
+};

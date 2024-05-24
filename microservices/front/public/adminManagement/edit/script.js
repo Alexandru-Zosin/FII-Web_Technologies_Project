@@ -1,6 +1,5 @@
 const urlParams = new URLSearchParams(window.location.search);
 const selectedDb = urlParams.get('db');
-console.log(selectedDb);
 
 var databasesPayload;
 var startRow = 1;
@@ -47,8 +46,10 @@ function renderTable() {
 
     const tableBody = document.getElementById("tableBody");
     tableBody.innerHTML = '';
+    var fetchedRowIndex = 1;
     for (let fetchedRow of Object.values(databasesPayload)) {
         row = document.createElement('tr');
+        row.id = fetchedRowIndex++;
         for (let key in fetchedRow) {
             cell = document.createElement('td');
             cell.setAttribute('contenteditable', true);
@@ -87,8 +88,12 @@ function mapColumnsToValues(row, buttonsNum) {
 }
 
 async function handleUpdate(row) {
+    const oldData = databasesPayload[`${row.id}`];
     const updatedData = mapColumnsToValues(row, 2);
-    console.log(updatedData);
+    const data = {
+        "old": oldData,
+        "updated": updatedData
+    };
 
     const response = await fetch(`https://localhost:3001/${selectedDb}`, {
         method: "PUT",
@@ -98,20 +103,19 @@ async function handleUpdate(row) {
             "Accept": "application/json",
             "Content-Type": "application/json",
         },
-        body: JSON.stringify(updatedData),
+        body: JSON.stringify(data),
     });
 
     if (response.status === 200) {
         await fetchTable(startRow, endRow);
         renderTable();
     } else {
-        window.alert("An error has occured."); // & Revert to before values?
+        window.alert(`An error has occured: ${await response.json().err}`);
     }
 }
 
 async function handleDelete(row) {
     const deletedData = mapColumnsToValues(row, 2);
-    console.log(deletedData);
 
     const response = await fetch(`https://localhost:3001/${selectedDb}`, {
         method: "DELETE",
@@ -126,15 +130,17 @@ async function handleDelete(row) {
 
     if (response.status === 200) {
         await fetchTable(startRow, endRow);
+        if (Object.keys(databasesPayload).length === 0) {
+            prevButton.click();
+        }
         renderTable();
     } else {
-        window.alert("An error has occured.");
+        window.alert(`An error has occured: ${await response.json().err}`);
     }
 }
 
 async function handleCreate(row) {
     const createdData = mapColumnsToValues(row, 1);
-    console.log(createdData);
 
     const response = await fetch(`https://localhost:3001/${selectedDb}`, {
         method: "POST",
@@ -147,11 +153,11 @@ async function handleCreate(row) {
         body: JSON.stringify(createdData),
     });
 
-    if (response.status === 200) {
+    if (response.status === 201) {
         await fetchTable(startRow, endRow);
         renderTable();
     } else {
-        window.alert("An error has occured.");
+        window.alert(`An error has occured.`);
     }
 }
 
@@ -215,6 +221,10 @@ nextButton.onclick = async () => {
     endRow += 10;
     await fetchTable(startRow, endRow);
     renderTable();
+    
+    if (Object.keys(databasesPayload).length === 0) {
+        prevButton.click();
+    }
 };
 
 document.getElementById('createRow').addEventListener("click", createRow);

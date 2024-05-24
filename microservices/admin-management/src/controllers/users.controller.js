@@ -9,12 +9,12 @@ async function uploadUser(req, res, tableName) {
     return uploadEntity(req, res, tableName, uploadToTable);
 }
 
-async function deleteUser(req, res, tableName) {
-    return deleteEntity(req, res, tableName, deleteFromTable);
-}
-
 async function updateUser(req, res, tableName) {
     return updateEntity(req, res, tableName, updateInTable);
 }
 
-module.exports = { getUsers, uploadUser, deleteUser, updateUser };
+async function deleteUser(req, res, tableName) {
+    return deleteEntity(req, res, tableName, deleteFromTable);
+}
+
+module.exports = { getUsers, uploadUser, updateUser, deleteUser };

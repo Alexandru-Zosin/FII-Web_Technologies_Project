@@ -1,4 +1,4 @@
-const { getTable } = require('../models/resources.model');
+const { getTable, uploadToTable, updateInTable, deleteFromTable } = require('../models/resources.model');
 const { getEntities, uploadEntity, updateEntity, deleteEntity } = require('../../utils/databaseTemplateController');
 
 async function getResources(req, res, tableName) {
