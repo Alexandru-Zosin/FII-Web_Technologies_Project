@@ -76,7 +76,7 @@ function renderTable() {
 
 function mapColumnsToValues(row, buttonsNum) {
     let rowData = {};
-    let cells = row.querySelectorAll('td');
+    let cells = row.querySelectorAll('td'); // Gasire de noduri via selectori CSS
     let keys = document.querySelectorAll('#tableHeader td');
 
     cells.forEach((cell, index) => {
@@ -230,3 +230,4 @@ nextButton.onclick = async () => {
 };
 
 document.getElementById('createRow').addEventListener("click", createRow);
+// sau .onclick = ... (DOM 1)

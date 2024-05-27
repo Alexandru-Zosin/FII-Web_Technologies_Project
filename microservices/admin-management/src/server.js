@@ -52,7 +52,7 @@ async function authorizeRequest(req) {
     }
 }
 
-const server = https.createServer(options, (req, res) => {
+const server = https.createServer(options, async (req, res) => {
     if (!setCORSHeadersOnValidOrigin(req, res))
         return;
 
@@ -60,8 +60,8 @@ const server = https.createServer(options, (req, res) => {
         res.writeHead(204, { 'Content-Length': '0' });
         return res.end();
     }
-
-    if (!authorizeRequest(req)) {
+    const authorizationPayload = await authorizeRequest(req);
+    if (!authorizationPayload) {
         res.writeHead(401, {
             'Content-Type': 'application/json',
         });

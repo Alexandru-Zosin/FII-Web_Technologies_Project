@@ -1,14 +1,25 @@
 const { registerUser } = require('../models/user.model');
 const { hashWithKey } = require('../../utils/crypting');
+const { validateEmail, validatePassword } = require('../../utils/validate');
 
 async function signup(req, res) {
-    const { email, password } = req.body;
+    const { email, password, confirmPassword } = req.body;
 
-    // other validation logic, to be discussed
-    if (!(email && password)) {
-        res.writeHead(400, { 'Content-Type': 'application/json' });
+    if (!validateEmail(email) || !validatePassword(password) || !validatePassword(confirmPassword)) {
+        res.writeHead(403, {
+            'Content-Type': 'application/json',
+        });
         return res.end(JSON.stringify({
-            error: 'Bad Request: Missing fields.'
+            error: 'Fordidden.'
+        }));
+    }
+
+    if (password !== confirmPassword) {
+        res.writeHead(400, {
+            'Content-Type': 'application/json',
+        });
+        return res.end(JSON.stringify({
+            error: 'Bad request. Password does not match Confirm Password'
         }));
     }
 

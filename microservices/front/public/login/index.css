@@ -63,7 +63,7 @@ body {
     margin-right: 0px;
 }
 
-.input, .data-form input[type="text"], .data-form input[type="password"], .data-form input[type="submit"] {
+.input, .data-form input[type="email"], .data-form input[type="password"], .data-form input[type="submit"] {
     padding: 10px;
     margin-top: 5px; 
     width: calc(100% - 22px); 

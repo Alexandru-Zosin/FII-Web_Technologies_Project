@@ -72,7 +72,7 @@ const createFiltersFromPrompt = async (req, res) => {
   const parsedUrl = url.parse(req.url, true);  // `true` parses the query string into an object
   const query = parsedUrl.query;  // This contains the parsed query string as an object
   const prompt = query.prompt; 
-  let gptVersion = validationJsonPayload.openAiKey != undefined ? 4 : 3.5;
+  let gptVersion = validationJsonPayload.openAiKey != undefined && validationJsonPayload?.openAiKey?.length != 0 ? 4 : 3.5;
   let openAiKey = gptVersion == 4 ? validationJsonPayload.openAiKey : retrieveEnvValue('OPEN_AI_KEY');
   let keyWasInvalid = false;
   let openAiAskAction = constructAskFromPrompt(prompt, openAiKey, gptVersion);
