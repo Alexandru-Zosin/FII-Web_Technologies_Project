@@ -130,7 +130,7 @@ async function initializeDatabases() {
             if (data.length > 0) {
                 // Create table based on the first object keys
                 var columns = Object.keys(data[0]).map(function (key) {
-                    return key + " " + (key === 'id' ? 'INT' : 'VARCHAR(255)');
+                    return key + " " + (key === 'id' ? 'INT' : 'TEXT');
                 }).join(", ");
                 var createTableSql = `CREATE TABLE IF NOT EXISTS ${dbConfig.databaseName} (${columns});`;
 

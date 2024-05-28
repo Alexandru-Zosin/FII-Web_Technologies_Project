@@ -1,46 +1,9 @@
-html {
-    height: 100vh;
-}
-
-body {
-    margin: 0;
-    padding: 0;
-    display: flex;
-    flex-direction: column;
-    justify-content: space-between;
-    font-family: Arial, sans-serif;
-    background-color: #f0f0f0; 
-    height: 100vh;
-}
-
-.nav-links {
-    display: flex;
-    flex-direction: row;
-    justify-content: space-between;
-    background-color: #333;
-    color: white; 
-    align-items: center;
-    margin-top: 0;
-    padding: 0 20px; 
-    box-shadow: 0 2px 4px rgba(0,0,0,0.1); 
-}
-
-.nav-links li {
-    list-style-type: none;
-}
-
 .fullwidth {
     padding: 20px; 
     display: flex;
     box-sizing: border-box;
     flex: 1;
     flex-direction: column;
-}
-
-.sun {
-    fill: currentColor; 
-    width: 30px; 
-    height: 30px;
 }
 
 .container {
@@ -121,4 +84,9 @@ body {
     #otherInteractions {
         flex-direction: column;
     }
+}
+
+a {
+    text-decoration: none;
+    color: white
 }

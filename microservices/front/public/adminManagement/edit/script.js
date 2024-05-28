@@ -52,8 +52,12 @@ function renderTable() {
         row.id = fetchedRowIndex++;
         for (let key in fetchedRow) {
             cell = document.createElement('td');
-            cell.setAttribute('contenteditable', true);
-            cell.textContent = fetchedRow[key];
+            const textDiv = document.createElement('div');
+            textDiv.innerText = fetchedRow[key];
+            textDiv.setAttribute('contenteditable', true);
+            textDiv.classList.add('heighted');
+            // cell.textContent = fetchedRow[key];
+            cell.appendChild(textDiv);
             row.appendChild(cell);
         }
         addUpdateDeleteButtons(row);
@@ -172,8 +176,11 @@ function createRow() {
 
         for (let i = 0; i < Object.keys(databasesPayload["1"]).length; i++) {
             let cell = document.createElement('td');
-            cell.setAttribute('contenteditable', true);
-            cell.textContent = '/'
+            const textDiv = document.createElement('div');
+            textDiv.innerText = '/';
+            textDiv.setAttribute('contenteditable', true);
+            textDiv.classList.add('heighted');
+            cell.appendChild(textDiv);
             row.appendChild(cell);
         }
 
