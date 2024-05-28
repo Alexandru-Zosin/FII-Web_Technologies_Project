@@ -32,7 +32,7 @@ const validateHeadersForCors = async (req, res) => {
         return false;
     }
 }
-
+// here to refix alex
 const handleQuery = async (req, res) => {
   validateHeadersForCors(req, res);
   const parsedUrl = url.parse(req.url, true);  

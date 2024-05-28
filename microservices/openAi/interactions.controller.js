@@ -50,6 +50,8 @@ const validateHeadersForCors = async (req, res) => {
 
 const MAXMIMUM_NUMBER_OF_TRIES = 3;
 
+// here to refix alex
+
 const createFiltersFromPrompt = async (req, res) => {
   validateHeadersForCors(req, res); // in order to add the headers to the response for the cors
 

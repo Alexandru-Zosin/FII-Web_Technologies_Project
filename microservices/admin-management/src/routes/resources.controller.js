@@ -1,3 +1,4 @@
+const url = require('url');
 const { getTable, uploadToTable, updateInTable, deleteFromTable, importResourcesTables, exportResourcesTables } = require('../models/resources.model');
 const { getEntities, uploadEntity, updateEntity, deleteEntity } = require('../../utils/databaseTemplateController');
 
@@ -18,8 +19,12 @@ async function updateResource(req, res, tableName) {
 }
 
 async function importResources(req, res) {
+    const parsedUrl = url.parse(req.url, true);  
+    const query = parsedUrl.query;
+    const type = query.type; 
+
     try { 
-        importResourcesTables(req.body);
+        await importResourcesTables(type, req.body);
         res.writeHead(200, { 'Content-Type': 'application/json' });
         return res.end(JSON.stringify({ message: 'Resources imported successfully' }));
     } catch (err) {
@@ -31,8 +36,12 @@ async function importResources(req, res) {
 }
 
 async function exportResources(req, res) {
+    const parsedUrl = url.parse(req.url, true);  
+    const query = parsedUrl.query;
+    const type = query.type; 
+
     try {
-        const data = await exportResourcesTables();
+        const data = await exportResourcesTables(type);
         res.writeHead(200, { 'Content-Type': 'application/json' });
         return res.end(JSON.stringify(data));
     } catch (error) {

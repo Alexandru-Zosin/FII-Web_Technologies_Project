@@ -75,20 +75,21 @@ const server = https.createServer(options, async (req, res) => {
         return;
     }
 
-    if (req.method === 'GET' && req.url === '/resources') {
+    const parsedUrl = url.parse(req.url, true);  
+    const pathname = parsedUrl.pathname;
+
+    if (req.method === 'GET' && pathname === '/resources') {
         exportResources(req, res);
         return;
     }
 
-    if (req.method === 'PUT' && req.url === '/resources') {
+    if (req.method === 'PUT' && pathname === '/resources') {
         parseJSON(req, res, () => {
             importResources(req, res);
         });
         return;
     }
 
-    const parsedUrl = url.parse(req.url, true);
-    const pathname = parsedUrl.pathname;
     const userTableMatch = pathname.match(/^\/users\/([^\/]+)$/);
     const resourceTableMatch = pathname.match(/^\/resources\/([^\/]+)$/);
 

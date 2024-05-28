@@ -1,6 +1,8 @@
+const parse = require('json2csv');
 const mysql = require('mysql');
 const { getConnectionFromPool, queryDatabase } = require('../../utils/databaseConnection');
 const { getTables, getTable, uploadToTable, updateInTable, deleteFromTable } = require('../../utils/databaseTemplateModel');
+const { csvToJson } = require('../../utils/jsoncsvConverter');
 
 const resourcesPool = mysql.createPool({
     connectionLimit: 10,
@@ -35,13 +37,19 @@ async function deleteFromResourceTable(tableName, idFields, idValues) { // delet
     return deleteFromTable(connection, tableName, idFields, idValues);
 }
 
-async function importResourcesTables(importData) {
+async function importResourcesTables(type, importData) {
+    if (type === 'csv') {
+        importData = await csvToJson(importData);
+    }
+
     const connection = await getConnectionFromPool(resourcesPool);
 
     const getTablesQuery = `SHOW TABLES`;
     const tablesQueryResult = await queryDatabase(connection, getTablesQuery, []);
     let tablesDeleted = 0;
     const tableDeleted = await new Promise((res) => {
+        if (tablesQueryResult.length == 0)
+            res('done');
         tablesQueryResult.map(async (table) => {
             await queryDatabase(connection, `DROP TABLE IF EXISTS ${table[`Tables_in_refi`]}`, []);
             tablesDeleted++;
@@ -49,7 +57,6 @@ async function importResourcesTables(importData) {
                 res('done');
         })
     });
-
 
     const tableNames = Object.keys(importData);
     let tablesProcessed = 0;
@@ -69,9 +76,11 @@ async function importResourcesTables(importData) {
         const createTableQuery = `CREATE TABLE ${tableName} (${columns.map(col => `${col} TEXT`).join(', ')})`;
         await queryDatabase(connection, createTableQuery, []);
 
-        const insertValues = rows.map(row => `(${columns.map(col => mysql.escape(row[col])).join(', ')})`).join(', ');
-        const insertDataQuery = `INSERT INTO ${tableName} (${columns.join(', ')}) VALUES ${insertValues}`;
-        await queryDatabase(connection, insertDataQuery, []);
+        for (const row of rows) {
+            const values = columns.map(col => mysql.escape(row[col])).join(', ');
+            const insertDataQuery = `INSERT INTO ${tableName} (${columns.join(', ')}) VALUES (${values})`;
+            await queryDatabase(connection, insertDataQuery, []);
+        }        
 
         tablesProcessed++;
         if (tablesProcessed === tableNames.length) {
@@ -80,7 +89,7 @@ async function importResourcesTables(importData) {
     });
 }
 
-async function exportResourcesTables() {
+async function exportResourcesTables(type) {
     const connection = await getConnectionFromPool(resourcesPool);
 
     const getTablesQuery = `SHOW TABLES`;
@@ -103,7 +112,22 @@ async function exportResourcesTables() {
             }
         });
     });
-    return alldata;
+
+    if (type === 'csv') {
+        let csvString = '';
+        for (const [table, data] of Object.entries(alldata)) {
+            try {
+                const csv = parse.parse(data, { header: true });
+                csvString += `\nTable: ${table}\n${csv}\n`;
+            } catch (err) {
+                console.error(`Error converting table ${table} to CSV:`, err);
+            }
+        }
+        const csvData = { data: csvString };
+        return csvData;
+    } else {
+        return alldata;
+    }
 }
 
 module.exports = {

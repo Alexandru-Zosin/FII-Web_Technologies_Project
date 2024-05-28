@@ -16,9 +16,6 @@ document.getElementById('submitButton').addEventListener('click', async () => {
     if (response.status != 200 && response.status != 201)
     {
         htmlString = `<p>
-        <span>
-            <img class="icon" alt="resource" src="https://upload.wikimedia.org/wikipedia/commons/6/6a/JavaScript-logo.png">
-            </span>
             <strong>${responseJsonPayload}</strong>
         </p>`
     }
@@ -27,13 +24,10 @@ document.getElementById('submitButton').addEventListener('click', async () => {
         htmlString = responseJsonPayload.map(resource =>
             `<p>
                 <span>
-                    <img class="icon" alt="resource" src="https://upload.wikimedia.org/wikipedia/commons/6/6a/JavaScript-logo.png">
+                    <img class="icon" alt="resource" src="${resource.favicon}">
                     </span>
-                    <strong><a href=${resource.url}>${resource.name}</a></strong>: 
-                    Lorem ipsum dolor sit amet, consectetur adipiscing elit, 
-                    sed do eiusmod tempor incididunt ut labore et dolore magna aliqua. 
-                    Ut enim ad minim veniam, quis nostrud exercitation ullamco laboris nisi ut 
-                    aliquip ex ea commodo consequat.
+                    <strong><a href=${resource.url} target='_blank'>${resource.name}</a></strong>: 
+                    ${resource.description}
             </p>`
         ).join(" ");    
         document.getElementById('answer').innerHTML = htmlString;

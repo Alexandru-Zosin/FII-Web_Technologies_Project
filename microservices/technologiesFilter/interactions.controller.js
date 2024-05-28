@@ -45,6 +45,8 @@ const validateHeadersForCors = async (req, res) => {
 
 const MAXMIMUM_NUMBER_OF_TRIES = 3;
 
+// here to refix alex
+
 const fetchTechnologeisFromDatabase = async (req, res) => {
   const parsedUrl = url.parse(req.url, true);  // `true` parses the query string into an object
   const query = parsedUrl.query;  // This contains the parsed query string as an object
