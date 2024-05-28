@@ -18,7 +18,16 @@ async function updateResource(req, res, tableName) {
 }
 
 async function importResources(req, res) {
-    importResourcesTables(req.body);
+    try { 
+        importResourcesTables(req.body);
+        res.writeHead(200, { 'Content-Type': 'application/json' });
+        return res.end(JSON.stringify({ message: 'Resources imported successfully' }));
+    } catch (err) {
+        res.writeHead(500, { 'Content-Type': 'application/json' });
+        return res.end(JSON.stringify({
+            err: `Internal Server Error: ${error}.`
+        }));
+    }
 }
 
 async function exportResources(req, res) {
