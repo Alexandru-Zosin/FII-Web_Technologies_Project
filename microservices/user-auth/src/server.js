@@ -1,9 +1,9 @@
 const https = require('https');
 const fs = require('fs');
-const { login } = require('./controllers/login.controller');
-const { signup } = require('./controllers/signup.controller');
-const { logout } = require('./controllers/logout.controller');
-const { validate } = require('./controllers/validate.controller');
+const { login } = require('./routes/login.controller');
+const { signup } = require('./routes/signup.controller');
+const { logout } = require('./routes/logout.controller');
+const { validate } = require('./routes/validate.controller');
 const { setCORSHeadersOnValidOrigin } = require('../utils/corsHeaders');
 const { parseJSON } = require('../utils/parseJSONBody');
 const PORT = 3000;
