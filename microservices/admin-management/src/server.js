@@ -9,9 +9,9 @@ require('dotenv').config({ path: path.join(__dirname, './.env') });
 
 const PORT = 3001;
 
-const { getDashboard } = require('./controllers/dashboard.controller.js');
-const { getUsers, uploadUser, updateUser, deleteUser } = require('./controllers/users.controller.js');
-const { getResources, uploadResource, updateResource, deleteResource, importResources, exportResources } = require('./controllers/resources.controller.js');
+const { getDashboard } = require('./routes/dashboard.controller.js');
+const { getUsers, uploadUser, updateUser, deleteUser } = require('./routes/users.controller.js');
+const { getResources, uploadResource, updateResource, deleteResource, importResources, exportResources } = require('./routes/resources.controller.js');
 
 let options;
 if (process.env.DEBUG_MODE === 'true') {

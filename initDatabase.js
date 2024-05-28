@@ -20,9 +20,9 @@ function readJsonFile(filePath) {
 }
 
 function connectToDatabase(config) {
-    return new Promise(function(res, rej) {
+    return new Promise(function (res, rej) {
         const connection = mysql.createConnection(config);
-        connection.connect(function(err) {
+        connection.connect(function (err) {
             if (err) {
                 rej(err);
             } else {
@@ -34,8 +34,8 @@ function connectToDatabase(config) {
 
 function queryDatabase(connection, sql, values) {
     values = values || [];
-    return new Promise(function(res, rej) {
-        connection.query(sql, values, function(err, result) {
+    return new Promise(function (res, rej) {
+        connection.query(sql, values, function (err, result) {
             if (err) {
                 rej(err);
             } else {
@@ -46,8 +46,8 @@ function queryDatabase(connection, sql, values) {
 }
 
 function closeConnection(connection) {
-    return new Promise(function(res, rej) {
-        connection.end(function(err) {
+    return new Promise(function (res, rej) {
+        connection.end(function (err) {
             if (err) {
                 rej(err);
             } else {
@@ -85,13 +85,24 @@ async function initializeDatabases() {
             id INT PRIMARY KEY AUTO_INCREMENT,
             email VARCHAR(255) NOT NULL,
             password TEXT NOT NULL,
-            darktheme BOOLEAN,
-            openaikey TEXT,
+            darktheme BOOLEAN DEFAULT 0,
+            openaikey TEXT DEFAULT '',
             role VARCHAR(255) DEFAULT 'user'
         );`;
 
         await queryDatabase(conUsers, createUserTableSql);
         console.log("Users table created in ReFIUSERS.");
+
+        const insertAdmin = `INSERT INTO users (email, password, darktheme, openaikey, role)
+        VALUES (
+            'admin@refisupport.com', 
+            'b68ca7bf988393c652c845498f080161c06c9842a28b5c5449c3477a9e71b24b',
+            0,
+            '',
+            'admin'
+        );`;
+        await queryDatabase(conUsers, insertAdmin);
+        console.log("Admin inserted in ReFIUSERS.");
 
         await closeConnection(conUsers);
         console.log("ReFIUSERS connection closed.");
@@ -118,7 +129,7 @@ async function initializeDatabases() {
 
             if (data.length > 0) {
                 // Create table based on the first object keys
-                var columns = Object.keys(data[0]).map(function(key) {
+                var columns = Object.keys(data[0]).map(function (key) {
                     return key + " " + (key === 'id' ? 'INT' : 'VARCHAR(255)');
                 }).join(", ");
                 var createTableSql = `CREATE TABLE IF NOT EXISTS ${dbConfig.databaseName} (${columns});`;
@@ -130,7 +141,7 @@ async function initializeDatabases() {
                 for (var j = 0; j < data.length; j++) {
                     var record = data[j];
                     // Find keys that contain arrays
-                    var arrayKeys = Object.keys(record).filter(function(key) {
+                    var arrayKeys = Object.keys(record).filter(function (key) {
                         return Array.isArray(record[key]);
                     });
 
@@ -156,8 +167,8 @@ async function initializeDatabases() {
                     // Insert all records into the table
                     var keys = Object.keys(record).join(", ");
                     var values = recordsToInsert.map(Object.values);
-                    var placeholders = recordsToInsert.map(function() {
-                        return `(${Object.values(record).map(function() { return '?'; }).join(", ")})`;
+                    var placeholders = recordsToInsert.map(function () {
+                        return `(${Object.values(record).map(function () { return '?'; }).join(", ")})`;
                     }).join(", ");
                     var insertSql = `INSERT INTO ${dbConfig.databaseName} (${keys}) VALUES ${placeholders}`;
 
