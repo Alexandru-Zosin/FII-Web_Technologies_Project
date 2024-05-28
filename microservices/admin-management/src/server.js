@@ -11,7 +11,7 @@ const PORT = 3001;
 
 const { getDashboard } = require('./controllers/dashboard.controller.js');
 const { getUsers, uploadUser, updateUser, deleteUser } = require('./controllers/users.controller.js');
-const { getResources, uploadResource, updateResource, deleteResource } = require('./controllers/resources.controller.js');
+const { getResources, uploadResource, updateResource, deleteResource, importResources, exportResources } = require('./controllers/resources.controller.js');
 
 let options;
 if (process.env.DEBUG_MODE === 'true') {
@@ -72,6 +72,18 @@ const server = https.createServer(options, async (req, res) => {
 
     if (req.method === 'GET' && req.url === '/dashboard') {
         getDashboard(req, res);
+        return;
+    }
+
+    if (req.method === 'GET' && req.url === '/resources') {
+        exportResources(req, res);
+        return;
+    }
+
+    if (req.method === 'PUT' && req.url === '/resources') {
+        parseJSON(req, res, () => {
+            importResources(req, res);
+        });
         return;
     }
 

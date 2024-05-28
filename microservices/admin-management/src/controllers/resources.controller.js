@@ -1,4 +1,4 @@
-const { getTable, uploadToTable, updateInTable, deleteFromTable } = require('../models/resources.model');
+const { getTable, uploadToTable, updateInTable, deleteFromTable, importResourcesTables, exportResourcesTables } = require('../models/resources.model');
 const { getEntities, uploadEntity, updateEntity, deleteEntity } = require('../../utils/databaseTemplateController');
 
 async function getResources(req, res, tableName) {
@@ -17,4 +17,21 @@ async function updateResource(req, res, tableName) {
     return updateEntity(req, res, tableName, updateInTable);
 }
 
-module.exports = { getResources, uploadResource, deleteResource, updateResource };
+async function importResources(req, res) {
+    importResourcesTables(req.body);
+}
+
+async function exportResources(req, res) {
+    try {
+        const data = await exportResourcesTables();
+        res.writeHead(200, { 'Content-Type': 'application/json' });
+        return res.end(JSON.stringify(data));
+    } catch (error) {
+        res.writeHead(500, { 'Content-Type': 'application/json' });
+        return res.end(JSON.stringify({
+            err: `Internal Server Error: ${error}.`
+        }));
+    }
+}
+
+module.exports = { getResources, uploadResource, deleteResource, updateResource, importResources, exportResources };

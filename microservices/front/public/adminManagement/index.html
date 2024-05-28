@@ -1,5 +1,6 @@
 <!DOCTYPE HTML>
 <html lang="en">
+
 <head>
     <meta name="viewport" content="width=device-width, initial-scale=1">
     <link rel="stylesheet" href="./index.css">
@@ -43,13 +44,18 @@
         <div class="container">
             <div id='changeData' class="data-section">
                 <form class="data-form">
-                    <span> Select the DB to be edited: </span> 
+                    <span> Select the DB to be edited: </span>
                     <select id="dbselect" name="DBSelector">
                     </select>
                     <div class="form-group">
-                        <input type="submit" id ='edit' value="Edit">
+                        <input type="submit" id='edit' value="Edit">
                     </div>
                 </form>
+            </div>
+            <div id="otherInteractions" class="data-section">
+                <button id="exportData"> Export Data </button>
+                <button id="importData">Import Data</button>
+                <input type="file" id="importFile" accept=".json" style="display: none;">
             </div>
         </div>
     </main>

@@ -85,6 +85,33 @@ body {
     background-color: #003d82;
 }
 
+#otherInteractions {
+    display: flex;
+    flex-direction: row;
+    justify-content: space-evenly;
+}
+
+#otherInteractions button {
+    padding: 10px 20px;
+    font-size: 16px;
+    border: none;
+    border-radius: 5px;
+    cursor: pointer;
+    transition: background-color 0.3s ease, transform 0.2s ease;
+    margin: 5px 0;
+}
+
+#otherInteractions button:nth-child(1) {
+    float: left;
+    background-color: #d9534f;
+    color: white;
+}
+
+#otherInteractions button:nth-child(2) {
+    float: right;
+    background-color: #5cb85c;
+    color: white;
+}
 
 @media (max-width: 768px) {
     #copyright {
