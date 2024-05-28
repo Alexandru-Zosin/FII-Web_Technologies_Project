@@ -48,8 +48,7 @@ async function updateEntity(req, res, tableName, updateInTable) {
         const { old, updated } = req.body;
 
         const idFields = Object.keys(old);
-        const oldIdValues = Object.values(old).map(value => value === null ? 'NULL' : value);
-//        const oldIdValues = Object.values(old);
+        const oldIdValues = Object.values(old);
         const newIdValues = Object.values(updated);
 
         await updateInTable(tableName, idFields, oldIdValues, newIdValues);
