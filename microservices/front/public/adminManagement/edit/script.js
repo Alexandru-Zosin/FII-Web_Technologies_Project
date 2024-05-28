@@ -109,6 +109,7 @@ async function handleUpdate(row) {
     if (response.status === 200) {
         await fetchTable(startRow, endRow);
         renderTable();
+        window.alert("Update successful.");
     } else {
         window.alert(`An error has occured: ${await response.json().err}`);
     }
@@ -134,6 +135,7 @@ async function handleDelete(row) {
             prevButton.click();
         }
         renderTable();
+        window.alert("Delete successful.");
     } else {
         window.alert(`An error has occured: ${await response.json().err}`);
     }
@@ -156,6 +158,7 @@ async function handleCreate(row) {
     if (response.status === 201) {
         await fetchTable(startRow, endRow);
         renderTable();
+        window.alert("Create successful.");
     } else {
         window.alert(`An error has occured.`);
     }
