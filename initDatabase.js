@@ -67,16 +67,16 @@ async function initializeDatabases() {
 
         console.log("Connected to MySQL!");
 
-        await queryDatabase(con, `DROP DATABASE IF EXISTS ReFIUSERS`);
+        await queryDatabase(con, `DROP DATABASE IF EXISTS refiusers`);
         console.log("ReFIUSERS database dropped.");
-        await queryDatabase(con, `CREATE DATABASE ReFIUSERS`);
+        await queryDatabase(con, `CREATE DATABASE refiusers`);
         console.log("ReFIUSERS database created.");
 
         const conUsers = await connectToDatabase({
             host: "localhost",
             user: "root",
             password: "",
-            database: "ReFIUSERS",
+            database: "refiusers",
         });
 
         console.log("Connected to ReFIUSERS!");
@@ -108,16 +108,16 @@ async function initializeDatabases() {
         console.log("ReFIUSERS connection closed.");
 
         //
-        await queryDatabase(con, `DROP DATABASE IF EXISTS ReFI`);
+        await queryDatabase(con, `DROP DATABASE IF EXISTS refi`);
         console.log("ReFI database dropped.");
-        await queryDatabase(con, `CREATE DATABASE ReFI`);
+        await queryDatabase(con, `CREATE DATABASE refi`);
         console.log("ReFI database created.");
 
         const conReFI = await connectToDatabase({
             host: "localhost",
             user: "root",
             password: "",
-            database: "ReFI",
+            database: "refi",
         });
 
         console.log("Connected to ReFI!");
@@ -130,7 +130,7 @@ async function initializeDatabases() {
             if (data.length > 0) {
                 // Create table based on the first object keys
                 var columns = Object.keys(data[0]).map(function (key) {
-                    return key + " " + (key === 'id' ? 'INT' : 'TEXT');
+                    return key + " " + (key === 'id' ? 'INT' : 'MEDIUMTEXT');
                 }).join(", ");
                 var createTableSql = `CREATE TABLE IF NOT EXISTS ${dbConfig.databaseName} (${columns});`;
 

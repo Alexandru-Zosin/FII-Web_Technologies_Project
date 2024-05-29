@@ -9,12 +9,12 @@ const resourcesPool = mysql.createPool({
     host: 'localhost',
     user: 'root',
     password: '',
-    database: 'ReFI'
+    database: 'refi'
 });
 
 async function getResourcesTables() {
     const connection = await getConnectionFromPool(resourcesPool);
-    return getTables(connection, "ReFI");
+    return getTables(connection, "refi");
 }
 
 async function getResourceTable(tableName, startRow = 1, endRow = 10) { // getTable
@@ -73,7 +73,7 @@ async function importResourcesTables(type, importData) {
 
         const columns = Object.keys(rows[0]);
 
-        const createTableQuery = `CREATE TABLE ${tableName} (${columns.map(col => `${col} TEXT`).join(', ')})`;
+        const createTableQuery = `CREATE TABLE ${tableName} (${columns.map(col => `${col} MEDIUMTEXT`).join(', ')})`;
         await queryDatabase(connection, createTableQuery, []);
 
         for (const row of rows) {

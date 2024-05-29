@@ -7,12 +7,12 @@ const usersPool = mysql.createPool({
     host: 'localhost',
     user: 'root',
     password: '',
-    database: 'ReFIUSERS'
+    database: 'refiusers'
 });
 
 async function getUsersTables() {
     const connection = await getConnectionFromPool(usersPool);
-    return getTables(connection, "ReFIUSERS");
+    return getTables(connection, "refiusers");
 }
 
 async function getUserTable(tableName, startRow = 1, endRow = 10) {
