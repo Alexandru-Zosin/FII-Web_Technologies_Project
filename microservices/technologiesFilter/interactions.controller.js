@@ -3,6 +3,10 @@ const fetch = require('node-fetch');
 const url = require('url');
 const mysql = require('mysql');
 
+const agent = new (require('https')).Agent({
+    rejectUnauthorized: false
+});
+
 const pool = mysql.createPool({
     connectionLimit: 10,
     host: 'localhost',
@@ -45,30 +49,50 @@ const validateHeadersForCors = async (req, res) => {
 
 const MAXMIMUM_NUMBER_OF_TRIES = 3;
 
-// here to refix alex
+// here to refix
 
 const fetchTechnologeisFromDatabase = async (req, res) => {
-  const parsedUrl = url.parse(req.url, true);  // `true` parses the query string into an object
-  const query = parsedUrl.query;  // This contains the parsed query string as an object
-  const jsonFilters = query.jsonFilters; 
-  console.log(jsonFilters);
-  try {
-    const sqlResponse = await fetchResultsFromSql(JSON.parse(jsonFilters));
 
-    res.writeHead(200, {'Content-Type': 'application/json', });
-    res.end(JSON.stringify(sqlResponse)); 
-  }
-  catch (e) {
-    console.log(e);
-    res.writeHead(406)
-    res.end(JSON.stringify({message: "JSON parsing was invalid. Aborting"}))
-  }
+    const validation = await fetch("https://localhost:3000/validate", { // this is how we get acces to the api key
+        agent,
+        method: "POST",
+        credentials: 'include',
+        mode: "cors",
+        headers: {
+            "Accept": "application/json",
+            "Content-Type": "application/json",
+            "Origin": "https://localhost:3557",
+            "Cookie": req.headers.cookie
+        },
+        body: JSON.stringify({})
+    });
+
+    if (validation.status !== 200) {
+        res.writeHead(401, { 'Content-Type': 'application/json' });
+        return res.end(JSON.stringify({ message: "User credentials invalid. Method not allowed" }));
+    }
+
+    const parsedUrl = url.parse(req.url, true);  // `true` parses the query string into an object
+    const query = parsedUrl.query;  // This contains the parsed query string as an object
+    const jsonFilters = query.jsonFilters;
+    console.log(jsonFilters);
+    try {
+        const sqlResponse = await fetchResultsFromSql(JSON.parse(jsonFilters));
+
+        res.writeHead(200, { 'Content-Type': 'application/json', });
+        res.end(JSON.stringify(sqlResponse));
+    }
+    catch (e) {
+        console.log(e);
+        res.writeHead(406)
+        res.end(JSON.stringify({ message: "JSON parsing was invalid. Aborting" }))
+    }
 };
 
 const fetchResultsFromSql = async (jsonObject) => {
-  const connection = await getConnectionFromPool();
+    const connection = await getConnectionFromPool();
 
-  const sql = `
+    const sql = `
   SELECT lang.id
   FROM languages lang
   JOIN license lic ON lang.id = lic.id
@@ -84,39 +108,39 @@ const fetchResultsFromSql = async (jsonObject) => {
   AND lic.License IN (${jsonObject.License.map(value => `'${value}'`).join(', ')})
   LIMIT 3;
   `
-  // for now expluded for the query since hard to determine by the ai (should introduce the options of multiple so we can deduce if the usre does not care about theese)
-  // AND realtime.realtimeCollaboration = ${jsonObject['Realtime Collaboration'] ? "1" : "0"}
-  // AND live.interactivity = ${jsonObject['Live Coding'] ? "1" : "0"};
+    // for now expluded for the query since hard to determine by the ai (should introduce the options of multiple so we can deduce if the usre does not care about theese)
+    // AND realtime.realtimeCollaboration = ${jsonObject['Realtime Collaboration'] ? "1" : "0"}
+    // AND live.interactivity = ${jsonObject['Live Coding'] ? "1" : "0"};
 
-  // error handling
-  const idsResult = await new Promise((res) => connection.query(sql, (err, result) => {
-    res(result);
-  }));
-  const ids = idsResult.map(row => row.id);
+    // error handling
+    const idsResult = await new Promise((res) => connection.query(sql, (err, result) => {
+        res(result);
+    }));
+    const ids = idsResult.map(row => row.id);
 
-  if (ids.length > 0) {
-    const technologiesQuery = `
+    if (ids.length > 0) {
+        const technologiesQuery = `
       SELECT *
       FROM technologies
       WHERE id IN (${ids.map(id => `'${id}'`).join(', ')});
     `;
 
-    // Execute the second query to get the information from the technologies table
-    const technologiesResult = await new Promise(res => connection.query(technologiesQuery, (err, result) => {
-      res(result)
-    }));
+        // Execute the second query to get the information from the technologies table
+        const technologiesResult = await new Promise(res => connection.query(technologiesQuery, (err, result) => {
+            res(result)
+        }));
 
-    // Now you have the technologiesResult which contains all the information for the given IDs
-    console.log(technologiesResult);
-    return technologiesResult;
-  } else {
-    console.log("No matching IDs found.");
-    throw new Error("No technology found");
-  }
+        // Now you have the technologiesResult which contains all the information for the given IDs
+        console.log(technologiesResult);
+        return technologiesResult;
+    } else {
+        console.log("No matching IDs found.");
+        throw new Error("No technology found");
+    }
 }
 
 module.exports = {
-  fetchTechnologeisFromDatabase,
-  validateHeadersForCors,
-  applyCorsHeadersOnRequest
+    fetchTechnologeisFromDatabase,
+    validateHeadersForCors,
+    applyCorsHeadersOnRequest
 }

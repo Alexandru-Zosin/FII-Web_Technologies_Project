@@ -5,7 +5,7 @@ const url = require('url');
 // This is a workaround we need because we dont have a certificate that is not self-signed
 // what we do is just to instruct http module in the asks we make to allow the self-signed certifcates as valid certificates
 const agent = new (require('https')).Agent({
-  rejectUnauthorized: false
+    rejectUnauthorized: false
 });
 
 const applyCorsHeadersOnRequest = async (req, res) => {
@@ -20,7 +20,7 @@ const validateHeadersForCors = async (req, res) => {
     const requestOrigin = req.headers.origin;
     console.log(requestOrigin);
     if ('https://localhost' == requestOrigin) {
-      console.log('setting here the headers');
+        console.log('setting here the headers');
         res.setHeader('Access-Control-Allow-Origin', requestOrigin);
         res.setHeader('Access-Control-Allow-Methods', 'POST, OPTIONS');
         res.setHeader('Access-Control-Allow-Headers', 'Content-Type, Accept');
@@ -32,60 +32,81 @@ const validateHeadersForCors = async (req, res) => {
         return false;
     }
 }
-// here to refix alex
+// here to refix
 const handleQuery = async (req, res) => {
-  validateHeadersForCors(req, res);
-  const parsedUrl = url.parse(req.url, true);  
-  const query = parsedUrl.query; 
-  const prompt = query.prompt; 
-  console.log('received erequest', prompt);
-  const filtersResponseFromOpenAi = await fetch("https://localhost:3555/extractFilter?prompt=" + encodeURIComponent(prompt), {
-    agent,
-    method: "GET",
-    credentials: 'include',
-    mode: "cors",
-    headers: {
-      "Accept": "application/json",
-      "Content-Type": "application/json",
-      "Origin": "https://localhost:3556",
-      "Cookie": req.headers.cookie
-    },
-  });
-  let wasKeyInvalid = filtersResponseFromOpenAi.status == 201;
-  // if err dont continue
-  const jsonFilters = await filtersResponseFromOpenAi.json();
-  const technologiesToServerBack = await fetch("https://localhost:3557/extractTechnologies?jsonFilters=" + encodeURIComponent(JSON.stringify(jsonFilters)),
-  {
-    agent,
-    method: "GET",
-    credentials: 'include',
-    mode: "cors",
-    headers: {
-      "Accept": "application/json",
-      "Content-Type": "application/json",
-      "Origin": "https://localhost:3556"
-    },
-  })
-  if (technologiesToServerBack.status != 200)
-  {
-    res.writeHead(406);
-    res.end(JSON.stringify("Error: No technologies that fit the reuqests found"));
-    return; 
-  }
-  const technologies = await technologiesToServerBack.json();
-  if (wasKeyInvalid)
-    res.writeHead(201, {'Content-Type': 'application/json'});
-  else
-    res.writeHead(200, {'Content-Type': 'application/json'});
-  const response = [];
-  for (let tech of technologies)
-    response.push(tech);
-  res.end(JSON.stringify(response));
+    validateHeadersForCors(req, res);
+
+    const validation = await fetch("https://localhost:3000/validate", { // this is how we get acces to the api key
+        agent,
+        method: "POST",
+        credentials: 'include',
+        mode: "cors",
+        headers: {
+            "Accept": "application/json",
+            "Content-Type": "application/json",
+            "Origin": "https://localhost:3556",
+            "Cookie": req.headers.cookie
+        },
+        body: JSON.stringify({})
+    });
+
+    if (validation.status !== 200) {
+        res.writeHead(401, { 'Content-Type': 'application/json' });
+        return res.end(JSON.stringify({ message: "User credentials invalid. Method not allowed" }));
+    }
+
+    const parsedUrl = url.parse(req.url, true);
+    const query = parsedUrl.query;
+    const prompt = query.prompt;
+    console.log('received erequest', prompt);
+    const filtersResponseFromOpenAi = await fetch("https://localhost:3555/extractFilter?prompt=" + encodeURIComponent(prompt), {
+        agent,
+        method: "GET",
+        credentials: 'include',
+        mode: "cors",
+        headers: {
+            "Accept": "application/json",
+            "Content-Type": "application/json",
+            "Origin": "https://localhost:3556",
+            "Cookie": req.headers.cookie
+        },
+    });
+    let wasKeyInvalid = filtersResponseFromOpenAi.status == 201;
+    // if err dont continue
+    const jsonFilters = await filtersResponseFromOpenAi.json();
+    const technologiesToServerBack = await fetch("https://localhost:3557/extractTechnologies?jsonFilters=" + encodeURIComponent(JSON.stringify(jsonFilters)),
+        {
+            agent,
+            method: "GET",
+            credentials: 'include',
+            mode: "cors",
+            headers: {
+                "Accept": "application/json",
+                "Content-Type": "application/json",
+                "Origin": "https://localhost:3556",
+                "Cookie": req.headers.cookie
+
+            },
+        })
+    if (technologiesToServerBack.status != 200) {
+        res.writeHead(406);
+        res.end(JSON.stringify("Error: No technologies that fit the reuqests found"));
+        return;
+    }
+    const technologies = await technologiesToServerBack.json();
+    if (wasKeyInvalid)
+        res.writeHead(201, { 'Content-Type': 'application/json' });
+    else
+        res.writeHead(200, { 'Content-Type': 'application/json' });
+    const response = [];
+    for (let tech of technologies)
+        response.push(tech);
+    res.end(JSON.stringify(response));
 };
 
 
 module.exports = {
-  handleQuery,
-  validateHeadersForCors,
-  applyCorsHeadersOnRequest
+    handleQuery,
+    validateHeadersForCors,
+    applyCorsHeadersOnRequest
 }

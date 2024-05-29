@@ -5,7 +5,7 @@ const url = require('url');
 const mysql = require('mysql');
 
 const agent = new (require('https')).Agent({
-  rejectUnauthorized: false
+    rejectUnauthorized: false
 });
 
 const pool = mysql.createPool({
@@ -50,78 +50,81 @@ const validateHeadersForCors = async (req, res) => {
 
 const MAXMIMUM_NUMBER_OF_TRIES = 3;
 
-// here to refix alex
+// here to refix
 
 const createFiltersFromPrompt = async (req, res) => {
-  validateHeadersForCors(req, res); // in order to add the headers to the response for the cors
+    validateHeadersForCors(req, res); // in order to add the headers to the response for the cors
 
-  const validation = await fetch("https://localhost:3000/validate", { // this is how we get acces to the api key
-    agent,
-    method: "POST",
-    credentials: 'include',
-    mode: "cors",
-    headers: {
-      "Accept": "application/json",
-      "Content-Type": "application/json",
-      "Origin": "https://localhost:3555",
-      "Cookie": req.headers.cookie
-    },
-    body: JSON.stringify({})
-  });
+    const validation = await fetch("https://localhost:3000/validate", { // this is how we get acces to the api key
+        agent,
+        method: "POST",
+        credentials: 'include',
+        mode: "cors",
+        headers: {
+            "Accept": "application/json",
+            "Content-Type": "application/json",
+            "Origin": "https://localhost:3555",
+            "Cookie": req.headers.cookie
+        },
+        body: JSON.stringify({})
+    });
 
-  const validationJsonPayload = await validation.json()
-
-  const parsedUrl = url.parse(req.url, true);  // `true` parses the query string into an object
-  const query = parsedUrl.query;  // This contains the parsed query string as an object
-  const prompt = query.prompt; 
-  let gptVersion = validationJsonPayload.openAiKey != undefined && validationJsonPayload?.openAiKey?.length != 0 ? 4 : 3.5;
-  let openAiKey = gptVersion == 4 ? validationJsonPayload.openAiKey : retrieveEnvValue('OPEN_AI_KEY');
-  let keyWasInvalid = false;
-  let openAiAskAction = constructAskFromPrompt(prompt, openAiKey, gptVersion);
-
-  for (let tryNumber = 1; tryNumber <= MAXMIMUM_NUMBER_OF_TRIES; ++tryNumber) {
-    try {
-
-      const response = await fetch("https://api.openai.com/v1/chat/completions", {
-        method: 'POST',
-        headers: openAiAskAction.headers,
-        body: JSON.stringify(openAiAskAction.payload)
-      })
-
-      const responsejson = await response.json();
-      if (responsejson?.error?.code == 'invalid_api_key')
-      {
-        throw new Error('InvalidApiKey');
-        continue;
-      }
-      const responseJsonPayload = JSON.parse(responsejson.choices[0].message.content);
-      console.log(responseJsonPayload)
-      // if we manage to valide it the received json then we are on the track to respond with it
-      const isJSONValid = avjValidateJSONStructure(responseJsonPayload); // later the validation here
-
-      if (isJSONValid) {
-        console.log('found a valid json');
-        if (keyWasInvalid == true)
-          res.writeHead(201, {'Content-Type': 'application/json'});
-        else
-          res.writeHead(200, {'Content-Type': 'application/json'});
-        res.end(JSON.stringify(responseJsonPayload)); 
-        return;
-      } // else we should just continue since the incrementation is done automatically
-    } catch (error) {
-      console.error("Error in open ai microservice while fetching the response -> ", error);
-      if (error.message == 'InvalidApiKey')
-      {
-        tryNumber = 0;
-        gptVersion = 3.5;
-        openAiKey = retrieveEnvValue('OPEN_AI_KEY');
-        keyWasInvalid = true
-        openAiAskAction = constructAskFromPrompt(prompt, openAiKey, gptVersion);
-      }
+    if (validation.status !== 200) {
+        res.writeHead(401, { 'Content-Type': 'application/json' });
+        return res.end(JSON.stringify({ message: "User credentials invalid. Method not allowed" }));
     }
-  }
-  res.writeHead(405);
-  res.end(JSON.stringify({message: "AI generation has failed multiple times, aborting"}));
+
+    const validationJsonPayload = await validation.json();
+
+    const parsedUrl = url.parse(req.url, true);  // `true` parses the query string into an object
+    const query = parsedUrl.query;  // This contains the parsed query string as an object
+    const prompt = query.prompt;
+    let gptVersion = validationJsonPayload.openAiKey != undefined && validationJsonPayload?.openAiKey?.length != 0 ? 4 : 3.5;
+    let openAiKey = gptVersion == 4 ? validationJsonPayload.openAiKey : retrieveEnvValue('OPEN_AI_KEY');
+    let keyWasInvalid = false;
+    let openAiAskAction = constructAskFromPrompt(prompt, openAiKey, gptVersion);
+
+    for (let tryNumber = 1; tryNumber <= MAXMIMUM_NUMBER_OF_TRIES; ++tryNumber) {
+        try {
+
+            const response = await fetch("https://api.openai.com/v1/chat/completions", {
+                method: 'POST',
+                headers: openAiAskAction.headers,
+                body: JSON.stringify(openAiAskAction.payload)
+            })
+
+            const responsejson = await response.json();
+            if (responsejson?.error?.code == 'invalid_api_key') {
+                throw new Error('InvalidApiKey');
+                continue;
+            }
+            const responseJsonPayload = JSON.parse(responsejson.choices[0].message.content);
+            console.log(responseJsonPayload)
+            // if we manage to valide it the received json then we are on the track to respond with it
+            const isJSONValid = avjValidateJSONStructure(responseJsonPayload); // later the validation here
+
+            if (isJSONValid) {
+                console.log('found a valid json');
+                if (keyWasInvalid == true)
+                    res.writeHead(201, { 'Content-Type': 'application/json' });
+                else
+                    res.writeHead(200, { 'Content-Type': 'application/json' });
+                res.end(JSON.stringify(responseJsonPayload));
+                return;
+            } // else we should just continue since the incrementation is done automatically
+        } catch (error) {
+            console.error("Error in open ai microservice while fetching the response -> ", error);
+            if (error.message == 'InvalidApiKey') {
+                tryNumber = 0;
+                gptVersion = 3.5;
+                openAiKey = retrieveEnvValue('OPEN_AI_KEY');
+                keyWasInvalid = true
+                openAiAskAction = constructAskFromPrompt(prompt, openAiKey, gptVersion);
+            }
+        }
+    }
+    res.writeHead(405);
+    res.end(JSON.stringify({ message: "AI generation has failed multiple times, aborting" }));
 };
 
 const constructAskFromPrompt = (userPrompt, api_key, gptVersion) => {
@@ -129,18 +132,18 @@ const constructAskFromPrompt = (userPrompt, api_key, gptVersion) => {
         "Content-Type": "application/json",
         "Authorization": `Bearer ${api_key}`
     }
-    
+
     payload = {
         "model": gptVersion == 4 ? 'gpt-4-1106-preview' : 'gpt-3.5-turbo-1106',
-        "response_format": {"type": "json_object"},
+        "response_format": { "type": "json_object" },
         "messages": [
-          {
-            "role": "system",
-            "content": "You are a helpful assistant. Your response should be in JSON format."
-          },
-          {
-            "role": "system",
-            "content": `Respond with a JSON object that validates the following schema (but dont add the semantic definitions or other stuff, just the pure JSON object): 
+            {
+                "role": "system",
+                "content": "You are a helpful assistant. Your response should be in JSON format."
+            },
+            {
+                "role": "system",
+                "content": `Respond with a JSON object that validates the following schema (but dont add the semantic definitions or other stuff, just the pure JSON object): 
             {
               "properties": {
                 "Platform": {
@@ -179,24 +182,24 @@ const constructAskFromPrompt = (userPrompt, api_key, gptVersion) => {
               }
             }            
             `
-          },
-          {
-            "role": "user",
-            "content": [
-              {
-                "type": "text",
-                "text": `
+            },
+            {
+                "role": "user",
+                "content": [
+                    {
+                        "type": "text",
+                        "text": `
                 You have to respond by giving an JSON object that fits the given schema and chooses the values that best fit the user requirments for a software item
                 User Requirments: ${userPrompt} 
                 `
-              }
-            ]
-          }
+                    }
+                ]
+            }
         ],
         "max_tokens": 1000,
     }
-    
-    return {headers, payload};
+
+    return { headers, payload };
 }
 
 module.exports = {
