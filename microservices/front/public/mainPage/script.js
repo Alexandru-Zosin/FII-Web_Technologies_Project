@@ -36,7 +36,22 @@ document.getElementById('submitButton').addEventListener('click', async () => {
             window.alert("The key was not valid, fallback to gpt 3.5");
 })
 
-window.onload = () => {
+window.onload = async () => {
+    const response = await fetch("https://localhost:3000/validate", {
+        method: "POST",
+        credentials: 'include',
+        mode: "cors",
+        headers: {
+            "Accept": "application/json",
+            "Content-Type": "application/json",
+        },
+        body: JSON.stringify({}),
+    });
+
+    if (response.status !== 200) {
+        window.location.href = "https://localhost/login/index.html";
+    }
+
     loader = document.getElementsByClassName('loader')[0];
     loader.style.display = 'none';
 }

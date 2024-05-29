@@ -19,7 +19,22 @@ const mapChangeTypeToHtml = {
     'newOpenAiToken': `<div class="form-group" id='changeableForm'><label for="openAiKey">OpenAI token</label><br><input type="text" id="openAiKey" name="openAiKey"><br></div>`
 }
 
-window.onload = () => {
+window.onload = async () => {
+    const response = await fetch("https://localhost:3000/validate", {
+        method: "POST",
+        credentials: 'include',
+        mode: "cors",
+        headers: {
+            "Accept": "application/json",
+            "Content-Type": "application/json",
+        },
+        body: JSON.stringify({}),
+    });
+
+    if (response.status !== 200) {
+        window.location.href = "https://localhost/login/index.html";
+    }
+
     document.getElementById("option").addEventListener("change", function(event) {
         console.log('event', event);
         const selectedOption = event.target.value;
