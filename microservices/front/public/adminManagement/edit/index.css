@@ -62,11 +62,11 @@ button:hover {
     background-color: #003d82;
 }
 
-#createRow {
+.createRow {
     background-color: #5cb85c;
 }
 
-#createRow:hover {
+.createRow:hover {
     background-color: #4cae4c;
 }
 

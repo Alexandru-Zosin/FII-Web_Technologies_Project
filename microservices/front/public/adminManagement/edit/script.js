@@ -187,6 +187,7 @@ function createRow() {
         let createCell = document.createElement('td');
         let createButton = document.createElement('button');
         createButton.textContent = 'Create';
+        createButton.classList.add("createRow");
         createButton.onclick = createHandler(handleCreate, row);
         createCell.appendChild(createButton);
         row.appendChild(createCell);
