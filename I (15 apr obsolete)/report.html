@@ -7,7 +7,7 @@
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>ARS for ResourceFinder</title>
     <link rel="stylesheet" href="reportstyle.css" />
-    
+
 </head>
 
 <body>
@@ -59,7 +59,7 @@
             <h3>2.1 Product Perspective</h3>
             <p>This platform is designed to enhance the accessibility and
                 usability of resources for creative programming. It serves as an intermediary between developers and a
-                 list of educational and practical resources, utilizing natural language processing to
+                list of educational and practical resources, utilizing natural language processing to
                 offer tailored recommendations. The system's uniqueness lies in its ability to interconnect with both
                 local databases and external APIs like OpenAI, providing a seamless integration for users seeking to
                 advance their programming skills in creative and innovative ways.
@@ -137,21 +137,8 @@
                 relevant resources, frameworks and tools, followed by a description covering key aspects of each.
             </p>
         </article>
-        <article id="resource-management">
-            <h3>4.2 Resource Submission and Management</h3>
-            <p>Authenticated users have the ability to submit resources to the platform. Each submission will require
-                the following information:
-            </p>
-            <ul>
-                <li>Title of the resource</li>
-                <li>Description</li>
-                <li>URL</li>
-                <li>Relevant Tags (e.g., JavaScript, WebGL, 3D Animation)</li>
-            </ul>
-            <p>Submissions will undergo a review process by administrators before being made publicly available.</p>
-        </article>
         <article id="profile-management">
-            <h3>4.3 User Preferences and Profile Management</h3>
+            <h3>4.2 User Preferences and Profile Management</h3>
             <p>Users can manage their profiles, including personal information, preferences, and linked OpenAI API
                 credentials. This section also allows users to review and manage their submitted resources and
                 preferences
@@ -159,9 +146,9 @@
             </p>
         </article>
         <article id="administrator-capabilities">
-            <h3>4.4 Administrator Capabilities</h3>
+            <h3>4.3 Administrator Capabilities</h3>
             <p>Administrators have access to a dashboard for supervising platform activity. This includes user
-                management, resource approval and other system settings. Features include:
+                management, resource approval (in the future) and other system settings. Features include:
             </p>
             <ul>
                 <li>User account creation, suspension, and deletion</li>
@@ -174,8 +161,23 @@
         <h2>5. Other Nonfunctional Requirements</h2>
         <article id="security">
             <h3>5.1 Security</h3>
-            <p>Security measures will include protection against SQL injection, XSS, Directory Traversal and Buffer Overflow attacks.
-                Secure API integration, GDPR compliance and user data protection are other priorities.</p>
+            <p>Security measures will include protection against SQL injection, XSS and Directory Traversal.</p>
+        </article>
+    </section>
+    <section>
+        <h2>6. Future improvements</h2>
+        <article id="resource-management">
+            <h3>6.1 Resource Submission and Management</h3>
+            <p>Authenticated users have the ability to submit resources to the platform. Each submission will require
+                the following information:
+            </p>
+            <ul>
+                <li>Title of the resource</li>
+                <li>Description</li>
+                <li>URL</li>
+                <li>Relevant Tags (e.g., JavaScript, WebGL, 3D Animation)</li>
+            </ul>
+            <p>Submissions will undergo a review process by administrators before being made publicly available.</p>
         </article>
     </section>
     <footer>
