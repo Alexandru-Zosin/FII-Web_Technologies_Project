@@ -33,9 +33,9 @@ async function findUserByEmail(email) {
 
 async function getHashedPasswordForUserId(userId) {
     const connection = await getConnectionFromPool();
-    const query = `SELECT password FROM users where id = ${userId}`
+    const query = `SELECT password FROM users where id = ?`
     const password = await new Promise((res, rej) => {
-        connection.query(query, (err, result) => {
+        connection.query(query, [userId], (err, result) => {
             if (err)
                 rej(err);
             else 
