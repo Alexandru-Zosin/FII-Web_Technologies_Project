@@ -1,5 +1,18 @@
 {
+  "name": "REFI",
+  "version": "1.6.0",
+  "scripts": {
+    "start:auth": "NODE_ENV=development DEBUG_MODE=true node ./microservices/user-auth/src/server.js",
+    "start:frontend": "NODE_ENV=development DEBUG_MODE=true node ./microservices/front/server.js",
+    "start:openai": "NODE_ENV=development DEBUG_MODE=true node ./microservices/openAi/interactions.server.js",
+    "start:proxy": "NODE_ENV=development DEBUG_MODE=true node ./microservices/queryHandler/interactions.server.js",
+    "start:userProfile": "NODE_ENV=development DEBUG_MODE=true node ./microservices/userProfileHandler/interactions.server.js",
+    "start:admin": "NODE_ENV=development DEBUG_MODE=true node ./microservices/admin-management/src/server.js",
+    "start:techFilter": "NODE_ENV=development DEBUG_MODE=true node ./microservices/technologiesFilter/interactions.server.js",
+    "start:all": "concurrently \"npm run start:auth\" \"npm run start:frontend\" \"npm run start:openai\" \"npm run start:proxy\" \"npm run start:userProfile\" \"npm run start:admin\" \"npm run start:techFilter\""
+  },
   "dependencies": {
+    "concurrently": "^7.6.0",
     "mysql": "^2.18.1"
   }
 }
