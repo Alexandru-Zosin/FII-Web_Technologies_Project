@@ -25,10 +25,10 @@ See C4 diagrams in [Project Architecture](arhitectura%20proiect%20(diag.%20C4)/)
 ## **Pages Preview**  
 
 ### **Homepage**
-![Homepage Screenshot](Image%20sample1.jpg)
+![Homepage Screenshot](Image%20sample%201.jpg)
 
 ### **Admin Panel Page**
-![AdminPanel Screenshot](Image%20sample2.jpg)
+![AdminPanel Screenshot](Image%20sample%202.jpg)
 
 ### **User Preferences**
-![UserPreferences Screenshot](Image%20sample3.jpg)
+![UserPreferences Screenshot](Image%20sample%203.jpg)
