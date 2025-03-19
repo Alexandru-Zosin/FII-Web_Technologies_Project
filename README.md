@@ -13,10 +13,10 @@ ReFI is a search platform designed to help developers discover creative resource
 See C4 diagrams in [Project Architecture](arhitectura%20proiect%20(diag.%20C4)/).
 
 ### **Microservices**
-- **admin-management Microservice**: Manages the entire database (both stored resources and users).  
-- **queryHandler Microservice**: Provides database searches based on with OpenAI NLP.  
-- **userProfileHandler Microservice**: Handles user profile preference updates.
-- **user-auth Microservice**: Handles authentication, logout, signup and user verification. 
+- **admin-management **: Manages the entire database (both stored resources and users).  
+- **queryHandler **: Manages database searches based on with OpenAI NLP.  
+- **userProfileHandler **: Handles user profile preference updates.
+- **user-auth **: Handles authentication, logout, signup and user verification. 
 
 ### **Databases**
 - **ReFI Database**: Stores information about resources.  
